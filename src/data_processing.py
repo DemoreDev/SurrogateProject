@@ -10,6 +10,9 @@ def process_data(input_path: str, output_path: str) -> pd.DataFrame:
     Args:
         input_path (str): O caminho para o arquivo .csv bruto
         output_path (str): O caminho onde o arquivo .csv processado será salvo
+
+    Return:
+        clean_df (pd.DataFrame): dataframe processado e pronto para modelagem
     """
     print("Iniciando o processamento do meta-dataset...")
 
