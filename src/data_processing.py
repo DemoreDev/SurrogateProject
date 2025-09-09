@@ -1,40 +1,34 @@
 import pandas as pd
 import numpy as np
-import time
 import os
 
-def process_data(input_path: str, output_path: str) -> None:
+def process_data(input_path: str, output_path: str) -> pd.DataFrame:
     """
-    Carrega um dataset bruto, aplica todas as etapas de limpeza e processamento
-    e salva o DataFrame limpo em um novo arquivo .csv
+    Carrega um dataset bruto, aplica todas as etapas de limpeza e processamento,
+    salva o DataFrame limpo em um novo arquivo .csv e retorna o DataFrame processado
 
     Args:
         input_path (str): O caminho para o arquivo .csv bruto
         output_path (str): O caminho onde o arquivo .csv processado será salvo
     """
     print("Iniciando o processamento do meta-dataset...")
-    time.sleep(1)
 
     # Carregar os dados
     try:
         df = pd.read_csv(input_path, sep=';')
         print(f"Dataset carregado com {df.shape[0]} linhas e {df.shape[1]} colunas")
-        time.sleep(4)
         original_rows = len(df) # Salvando número de linhas original
-    except FileNotFoundError:
-        print(f"ERRO: O arquivo de entrada não foi encontrado em '{input_path}'. Verifique o caminho.")
-        return
+    except FileNotFoundError as e:
+        print(f"ERRO: O arquivo de entrada não foi encontrado em '{input_path}'.")
+        raise e
     
     print("\nRemovendo linhas NaN...")
-    time.sleep(1)
 
     # Remover execuções onde os targets não tem valor (NaNs)
     df.dropna(subset=['F1 (macro averaged by label)', 'Model Size'], inplace=True)
     print(f"Removidas {original_rows - len(df)} linhas. Restaram {len(df)} linhas validas")
-    time.sleep(4)
 
     print("\nProcessando todas as colunas...")
-    time.sleep(1)
 
     # processando e binarizando a coluna "feature preprocessing"
     df = df.rename(columns={'NO_FEATURE_PREPROCESSING': 'feature preprocessing'})
@@ -53,21 +47,22 @@ def process_data(input_path: str, output_path: str) -> None:
     df[columns_to_fill] = df[columns_to_fill].fillna(-1)
 
     # Verificações finais
-    print("\nProcessamento concluido. Exibindo o resultado:")
-    clean_df = df.copy() # Para desfragmentar a memória (otimizar)
+    print("\nProcessamento concluido!:")
+    clean_df = df.copy() # Evita warning de fragmentação
 
     # Criando a coluna "model size log"
     clean_df['Model Size Log'] = np.log1p(clean_df['Model Size'])
     nans = clean_df.isnull().sum().sum()
-    print(f"total de NaNs após o processamento: {nans}\n\n")
-    print(clean_df.head(5))
-    time.sleep(8)
+    print(f"total de NaNs após o processamento: {nans}")
 
     # Salvando o df limpo em .csv novamente
     try:
         output_dir = os.path.dirname(output_path) # Garante que o diretório de saída exista
         os.makedirs(output_dir, exist_ok=True)
         clean_df.to_csv(output_path, index=False)
-        print(f"\n\nDataset salvo com sucesso em: {output_path}")
+        print(f"\nDataset salvo com sucesso em: {output_path}")
     except (IOError, PermissionError) as e:
-        print(f"\n\nERRO: Não foi possível salvar o arquivo em '{output_path}'. Erro: {e}")
+        print(f"\nERRO: Não foi possível salvar o arquivo em '{output_path}'. Erro: {e}")
+        raise e
+
+    return clean_df
