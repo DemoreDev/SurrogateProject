@@ -1,17 +1,17 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Ridge
 from sklearn.multioutput import MultiOutputRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import make_pipeline
-from sklearn.metrics import mean_squared_error, r2_score
 
-def train_ridge_regression(X_train: pd.DataFrame, 
-                           y_train: pd.DataFrame,
-                           alpha_values: list[float] = [0.1, 1.0, 5.0, 10.0, 30.0, 50.0, 75.0, 100.0]
-                           ) -> GridSearchCV:
+def train_ridge_regression(
+    X_train: pd.DataFrame, 
+    y_train: pd.DataFrame,
+    alpha_values: list[float] = [0.1, 1.0, 5.0, 10.0, 30.0, 50.0, 75.0, 100.0]
+) -> GridSearchCV:
     """
     Cria, otimiza e treina o modelo baseline de Regressão Ridge.
 
@@ -56,38 +56,55 @@ def train_ridge_regression(X_train: pd.DataFrame,
 
 #------------------------------------------------------------------------------------------------------------
 
-def evaluate_model_performance(y_true: pd.DataFrame, y_pred: np.ndarray) -> dict[str, float]:
+def train_random_forest(
+    X_train: pd.DataFrame, 
+    y_train: pd.DataFrame
+) -> RandomizedSearchCV:
     """
-    Calcula um conjunto de métricas de avaliação de regressão para um problema multitarget.
+    Cria, otimiza e treina um modelo RandomForestRegressor 
 
     Args:
-        y_true (pd.DataFrame): DataFrame com os valores reais dos alvos.
-        y_pred (np.ndarray): Array NumPy com os valores previstos pelo modelo.
+        X_train (pd.DataFrame): DataFrame com as features de treinamento.
+        y_train (pd.DataFrame): DataFrame com os targets de treinamento.
 
     Returns:
-        Dict[str, float]: Um dicionário contendo os nomes das métricas e seus respectivos scores.
+        RandomizedSearchCV: O objeto RandomizedSearchCV treinado
     """
-    # Extrair os nomes das colunas alvo do DataFrame y_true
-    target_1_name = y_true.columns[0]
-    target_2_name = y_true.columns[1]
 
-    # Calcular as métricas para o primeiro alvo
-    r2_target_1 = r2_score(y_true.iloc[:, 0], y_pred[:, 0])
-    rmse_target_1 = np.sqrt(mean_squared_error(y_true.iloc[:, 0], y_pred[:, 0]))
-    
-    # Calcular as métricas para o segundo alvo
-    r2_target_2 = r2_score(y_true.iloc[:, 1], y_pred[:, 1])
-    rmse_target_2 = np.sqrt(mean_squared_error(y_true.iloc[:, 1], y_pred[:, 1]))
-    
-    # Montar o dicionário de resultados
-    metrics = {
-        f"R2 para {target_1_name}": r2_target_1,
-        f"R2 para {target_2_name}": r2_target_2,
-        f"RMSE para {target_1_name}": rmse_target_1,
-        f"RMSE para {target_2_name}": rmse_target_2
+    # Criar o pipeline:
+    # diferente do modelo ridge, aqui o escalonamento não é necessário
+    pipeline = make_pipeline(
+        # Novamente wrapper + regressor (dessa vez o regressor é o random forest)
+        MultiOutputRegressor(RandomForestRegressor(random_state=42))
+    )
+
+    # Definir os valores a testar
+    param_distributions = {
+        'multioutputregressor__estimator__n_estimators': [500],
+        'multioutputregressor__estimator__max_depth': [40],
+        'multioutputregressor__estimator__min_samples_split': [5],
+        'multioutputregressor__estimator__min_samples_leaf': [1],
+        'multioutputregressor__estimator__max_features': ['sqrt'],
+        'multioutputregressor__estimator__bootstrap': [False]
     }
+
+    # Instanciando o random search
+    random_search = RandomizedSearchCV(
+        estimator=pipeline, 
+        param_distributions=param_distributions,
+        n_iter=1,
+        cv=2,
+        scoring='r2',
+        n_jobs=-1,
+        verbose=1,
+        random_state=42
+    )
+
+    # Testar os hiperparâmetros usando cross validation de 5 folds
+    print("Iniciando o RandomSearch...")
+    random_search.fit(X_train, y_train)
+
+    print(f"Melhores parâmetros encontrados: {random_search.best_params_}")
+    print(f"Melhor R² (média do cross validation): {random_search.best_score_:.4f}\n")
     
-    # Arredondar os valores para 4 casas decimais para melhor visualização
-    metrics = {key: round(value, 4) for key, value in metrics.items()}
-    
-    return metrics
+    return random_search
