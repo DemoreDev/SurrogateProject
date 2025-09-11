@@ -6,6 +6,7 @@ from sklearn.linear_model import Ridge
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import make_pipeline
+import lightgbm as lgb
 
 def train_ridge_regression(
     X_train: pd.DataFrame, 
@@ -102,6 +103,57 @@ def train_random_forest(
 
     # Testar os hiperparâmetros usando cross validation de 5 folds
     print("Iniciando o RandomSearch...")
+    random_search.fit(X_train, y_train)
+
+    print(f"Melhores parâmetros encontrados: {random_search.best_params_}")
+    print(f"Melhor R² (média do cross validation): {random_search.best_score_:.4f}\n")
+    
+    return random_search
+
+#------------------------------------------------------------------------------------------------------------
+
+def train_lgbm(
+    X_train: pd.DataFrame, 
+    y_train: pd.DataFrame,
+) -> RandomizedSearchCV:
+    """
+    Cria, otimiza e treina um modelo LightGBM 
+
+    Args:
+        X_train (pd.DataFrame): DataFrame com as features de treinamento.
+        y_train (pd.DataFrame): DataFrame com os targets de treinamento.
+
+    Returns:
+        RandomizedSearchCV: O objeto RandomizedSearchCV treinado.
+    """
+
+    n_iter= 20 
+    pipeline = make_pipeline(
+        MultiOutputRegressor(lgb.LGBMRegressor(random_state=42))
+    )
+
+    # Definir os valores e distribuições a testar para os hiperparâmetros do LGBM
+    param_distributions = {
+        'multioutputregressor__estimator__n_estimators': [200, 500, 700, 1000],
+        'multioutputregressor__estimator__learning_rate': [0.01, 0.05, 0.1],
+        'multioutputregressor__estimator__num_leaves': [20, 31, 40, 50],
+        'multioutputregressor__estimator__max_depth': [-1, 10, 20],
+        'multioutputregressor__estimator__reg_alpha': [0.1, 0.5, 1.0], 
+        'multioutputregressor__estimator__reg_lambda': [0.1, 0.5, 1.0] 
+    }
+
+    random_search = RandomizedSearchCV(
+        estimator=pipeline,
+        param_distributions=param_distributions,
+        n_iter=n_iter,
+        cv=2, 
+        scoring='r2',
+        n_jobs=-1,
+        verbose=1,
+        random_state=42
+    )
+
+    print(f"Iniciando o treinamento do LightGBM")
     random_search.fit(X_train, y_train)
 
     print(f"Melhores parâmetros encontrados: {random_search.best_params_}")

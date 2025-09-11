@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
+from joblib import dump
+from typing import Any
 from sklearn.metrics import mean_squared_error, r2_score
 
 # Avalia a performance de qualuqer modelo usando RMSE e R2
@@ -83,3 +85,29 @@ def save_results(
         
     except (IOError, PermissionError) as e:
         print(f"ERRO: Não foi possível salvar os resultados em '{filepath}'. Erro: {e}")
+
+#-----------------------------------------------------------------------------------------
+
+def save_model(model: Any, filepath: str) -> None:
+    """
+    Salva um objeto de modelo treinado em um arquivo usando joblib.
+
+    Args:
+        model (Any): O objeto do modelo treinado (ex: o pipeline retornado
+                    pelo .best_estimator_ do GridSearchCV).
+    """
+
+    print(f"Salvando o modelo em: {filepath}...")
+    try:
+        # Garante que o diretório de destino exista
+        output_dir = os.path.dirname(filepath)
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Salva o modelo no arquivo especificado
+        dump(model, filepath)
+        
+        print("Modelo salvo com sucesso!")
+        
+    except (IOError, PermissionError) as e:
+        print(f"Erro: Não foi possível salvar o modelo em '{filepath}'.")
+        raise e
