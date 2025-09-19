@@ -1,25 +1,31 @@
 import pandas as pd
+import optuna
+import lightgbm as lgb
 from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import Ridge
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import make_pipeline
-import lightgbm as lgb
+from typing import Tuple, Dict, Any
 
+
+#--------- Modelos da abordagem MultiOutputRegressor ---------
+
+# Utiliza GridSearch
 def train_ridge_regression(
     X_train: pd.DataFrame, 
     y_train: pd.DataFrame,
     alpha_values: list[float] = [0.1, 1.0, 5.0, 10.0, 30.0, 50.0, 75.0, 100.0]
 ) -> GridSearchCV:
     """
-    Cria, otimiza e treina o modelo baseline de Regressão Ridge.
+    Cria, otimiza e treina o modelo baseline de Regressão Ridge
 
     Args:
-        X_train (pd.DataFrame): DataFrame com as features de treinamento.
-        y_train (pd.DataFrame): DataFrame com os targets de treinamento.
-        alpha_values (List[float], optional): Uma lista de valores alpha para o GridSearchCV testar.
+        X_train (pd.DataFrame): DataFrame com as features 
+        y_train (pd.DataFrame): DataFrame com os targets 
+        alpha_values (List[float], optional): Uma lista de valores alpha para o GridSearchCV testar
                                               Defaults to [0.1, 1.0, 5.0, ...].
 
     Returns:
@@ -40,7 +46,7 @@ def train_ridge_regression(
     grid_search = GridSearchCV(
         estimator=pipeline, # objeto pipeline criado acima
         param_grid=grid, # conjunto de valores a testar
-        cv=5, # quantidade de folds
+        cv=3, # quantidade de folds
         scoring='r2', # métrica de avaliação
         n_jobs=-1, # Usa todo o poder de processamento
         verbose=1 # Mostra o progresso 
@@ -57,106 +63,143 @@ def train_ridge_regression(
 
 #------------------------------------------------------------------------------------------------------------
 
+# Utiliza Optuna
 def train_random_forest(
     X_train: pd.DataFrame, 
-    y_train: pd.DataFrame
-) -> RandomizedSearchCV:
+    y_train: pd.DataFrame,
+    n_trials: int = 50  
+) -> Tuple[Any, Dict, optuna.study.Study]:
     """
-    Cria, otimiza e treina um modelo RandomForestRegressor 
+    Cria, otimiza e treina um modelo RandomForest
 
     Args:
-        X_train (pd.DataFrame): DataFrame com as features de treinamento.
-        y_train (pd.DataFrame): DataFrame com os targets de treinamento.
+        X_train (pd.DataFrame): DataFrame com as features 
+        y_train (pd.DataFrame): DataFrame com os targets 
+        n_trials (int): Número de combinações de hiperparâmetros a serem testadas pelo Optuna
 
     Returns:
-        RandomizedSearchCV: O objeto RandomizedSearchCV treinado
+        Tuple[Any, Dict, optuna.study.Study]: Uma tupla contendo:
+            - O melhor modelo (pipeline) treinado com todos os dados de treino.
+            - O dicionário com os melhores hiperparâmetros encontrados.
+            - O objeto de estudo completo do Optuna para análises futuras.
     """
 
-    # Criar o pipeline:
-    # diferente do modelo ridge, aqui o escalonamento não é necessário
-    pipeline = make_pipeline(
-        # Novamente wrapper + regressor (dessa vez o regressor é o random forest)
-        MultiOutputRegressor(RandomForestRegressor(random_state=42))
+    # Esta função interna define um único experimento. O Optuna irá chamá-la 'n_trials' vezes.
+    def objective(trial: optuna.Trial) -> float:
+        
+        # Definir o espaço de busca de hiperparâmetros
+        params = {
+            'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
+            'max_depth': trial.suggest_int('max_depth', 10, 50),
+            'min_samples_split': trial.suggest_int('min_samples_split', 2, 15),
+            'min_samples_leaf': trial.suggest_int('min_samples_leaf', 1, 6),
+            'max_features': trial.suggest_categorical('max_features', ['sqrt', 'log2']),
+            'random_state': 42
+        }
+
+        # Construir o pipeline com os hiperparâmetros sugeridos
+        pipeline = make_pipeline(
+            MultiOutputRegressor(RandomForestRegressor(**params)) 
+        )
+        
+        # Avaliar o modelo usando validação cruzada
+        scores = cross_val_score(
+            pipeline,
+            X=X_train,
+            y=y_train,
+            cv=3,
+            scoring='r2',
+            n_jobs=-1
+        )
+        
+        # Retornar o score médio, que o Optuna tentará maximizar
+        return scores.mean()
+
+    print(f"Iniciando a otimização com Optuna...")
+    study = optuna.create_study(direction='maximize')
+    study.optimize(objective, n_trials=n_trials)
+
+    print("\nOtimização concluída.")
+    print(f"Melhores parâmetros encontrados: {study.best_params}")
+    print(f"Melhor R² (média do cross validation): {study.best_value:.4f}")
+
+    # Optuna encontra os parâmetros, mas não retreina o modelo final
+    print("\nRetreinando o modelo com os melhores parâmetros...")
+    best_params = study.best_params
+    best_pipeline = make_pipeline(
+        MultiOutputRegressor(RandomForestRegressor(**best_params, random_state=42))
     )
+    best_pipeline.fit(X_train, y_train)
+    print("Modelo final treinado com sucesso.\n")
 
-    # Definir os valores a testar
-    param_distributions = {
-        'multioutputregressor__estimator__n_estimators': [500],
-        'multioutputregressor__estimator__max_depth': [40],
-        'multioutputregressor__estimator__min_samples_split': [5],
-        'multioutputregressor__estimator__min_samples_leaf': [1],
-        'multioutputregressor__estimator__max_features': ['sqrt'],
-        'multioutputregressor__estimator__bootstrap': [False]
-    }
-
-    # Instanciando o random search
-    random_search = RandomizedSearchCV(
-        estimator=pipeline, 
-        param_distributions=param_distributions,
-        n_iter=1,
-        cv=2,
-        scoring='r2',
-        n_jobs=-1,
-        verbose=1,
-        random_state=42
-    )
-
-    # Testar os hiperparâmetros usando cross validation de 5 folds
-    print("Iniciando o RandomSearch...")
-    random_search.fit(X_train, y_train)
-
-    print(f"Melhores parâmetros encontrados: {random_search.best_params_}")
-    print(f"Melhor R² (média do cross validation): {random_search.best_score_:.4f}\n")
-    
-    return random_search
+    return best_pipeline, study.best_params, study
 
 #------------------------------------------------------------------------------------------------------------
 
+# Utiliza Optuna
 def train_lgbm(
     X_train: pd.DataFrame, 
     y_train: pd.DataFrame,
-) -> RandomizedSearchCV:
+    n_trials: int = 50 
+) -> Tuple[Any, Dict, optuna.study.Study]:
     """
-    Cria, otimiza e treina um modelo LightGBM 
+    Cria, otimiza e treina um modelo LightGBM
 
     Args:
-        X_train (pd.DataFrame): DataFrame com as features de treinamento.
-        y_train (pd.DataFrame): DataFrame com os targets de treinamento.
+        X_train (pd.DataFrame): DataFrame com as features 
+        y_train (pd.DataFrame): DataFrame com os targets 
+        n_trials (int): Número de combinações a serem testadas pelo Optuna
 
     Returns:
-        RandomizedSearchCV: O objeto RandomizedSearchCV treinado.
+        Tuple[Any, Dict, optuna.study.Study]: Uma tupla contendo:
+            - O melhor modelo (pipeline) treinado.
+            - O dicionário com os melhores hiperparâmetros.
+            - O objeto de estudo completo do Optuna.
     """
+    def objective(trial: optuna.Trial) -> float:
+        
+        # Definir o espaço de busca de hiperparâmetros 
+        params = {
+            'n_estimators': trial.suggest_int('n_estimators', 200, 1000),
+            'learning_rate': trial.suggest_float('learning_rate', 1e-3, 0.1, log=True),
+            'num_leaves': trial.suggest_int('num_leaves', 20, 60),
+            'max_depth': trial.suggest_int('max_depth', 5, 20),
+            'reg_alpha': trial.suggest_float('reg_alpha', 1e-8, 1.0, log=True),
+            'reg_lambda': trial.suggest_float('reg_lambda', 1e-8, 1.0, log=True),
+            'random_state': 42
+        }
 
-    n_iter= 20 
-    pipeline = make_pipeline(
-        MultiOutputRegressor(lgb.LGBMRegressor(random_state=42))
+        # Construir o pipeline com os hiperparâmetros sugeridos
+        pipeline = make_pipeline(
+            MultiOutputRegressor(lgb.LGBMRegressor(**params))
+        )
+        
+        # Avaliar o modelo usando validação cruzada
+        scores = cross_val_score(
+            pipeline,
+            X=X_train,
+            y=y_train,
+            cv=3,
+            scoring='r2',
+            n_jobs=-1
+        )
+        
+        return scores.mean()
+
+    print(f"Iniciando a otimização com Optuna...")
+    study = optuna.create_study(direction='maximize')
+    study.optimize(objective, n_trials=n_trials)
+
+    print("\nOtimização concluída.")
+    print(f"Melhores parâmetros encontrados: {study.best_params}")
+    print(f"Melhor R² (média do cross validation): {study.best_value:.4f}")
+
+    print("\nRetreinando o modelo com os melhores parâmetros...")
+    best_params = study.best_params
+    best_pipeline = make_pipeline(
+        MultiOutputRegressor(lgb.LGBMRegressor(**best_params, random_state=42))
     )
+    best_pipeline.fit(X_train, y_train)
+    print("Modelo final treinado com sucesso.\n")
 
-    # Definir os valores e distribuições a testar para os hiperparâmetros do LGBM
-    param_distributions = {
-        'multioutputregressor__estimator__n_estimators': [200, 500, 700, 1000],
-        'multioutputregressor__estimator__learning_rate': [0.01, 0.05, 0.1],
-        'multioutputregressor__estimator__num_leaves': [20, 31, 40, 50],
-        'multioutputregressor__estimator__max_depth': [-1, 10, 20],
-        'multioutputregressor__estimator__reg_alpha': [0.1, 0.5, 1.0], 
-        'multioutputregressor__estimator__reg_lambda': [0.1, 0.5, 1.0] 
-    }
-
-    random_search = RandomizedSearchCV(
-        estimator=pipeline,
-        param_distributions=param_distributions,
-        n_iter=n_iter,
-        cv=2, 
-        scoring='r2',
-        n_jobs=-1,
-        verbose=1,
-        random_state=42
-    )
-
-    print(f"Iniciando o treinamento do LightGBM")
-    random_search.fit(X_train, y_train)
-
-    print(f"Melhores parâmetros encontrados: {random_search.best_params_}")
-    print(f"Melhor R² (média do cross validation): {random_search.best_score_:.4f}\n")
-    
-    return random_search
+    return best_pipeline, study.best_params, study

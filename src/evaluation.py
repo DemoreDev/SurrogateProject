@@ -49,7 +49,7 @@ def save_results(
     model_name: str, 
     metrics: dict[str, float],
     best_params: dict,
-    filepath: str = '../reports/model_comparison.csv'
+    filepath: str 
 ) -> None:
     """
     Salva as métricas de um modelo em um arquivo CSV, criando o arquivo
