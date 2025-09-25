@@ -1,6 +1,7 @@
 import pandas as pd
 import optuna
 import lightgbm as lgb
+import catboost as cb
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
@@ -198,6 +199,73 @@ def train_lgbm(
     best_params = study.best_params
     best_pipeline = make_pipeline(
         MultiOutputRegressor(lgb.LGBMRegressor(**best_params, random_state=42))
+    )
+    best_pipeline.fit(X_train, y_train)
+    print("Modelo final treinado com sucesso.\n")
+
+    return best_pipeline, study.best_params, study
+
+#------------------------------------------------------------------------------------------------------------
+
+def train_catboost(
+    X_train: pd.DataFrame, 
+    y_train: pd.DataFrame,
+    n_trials: int = 50 
+) -> Tuple[Any, Dict, optuna.study.Study]:
+    """
+    Cria, otimiza e treina um modelo CatBoost
+
+    Args:
+        X_train (pd.DataFrame): DataFrame com as features 
+        y_train (pd.DataFrame): DataFrame com os targets 
+        n_trials (int): Número de combinações a serem testadas pelo Optuna
+
+    Returns:
+        Tuple[Any, Dict, optuna.study.Study]: Uma tupla contendo:
+            - O melhor modelo (pipeline) treinado.
+            - O dicionário com os melhores hiperparâmetros.
+            - O objeto de estudo completo do Optuna.
+    """
+    def objective(trial: optuna.Trial) -> float:
+        
+        # Definir o espaço de busca de hiperparâmetros 
+        params = {
+            'iterations': trial.suggest_int('iterations', 200, 1000),
+            'learning_rate': trial.suggest_float('learning_rate', 1e-3, 0.1, log=True),
+            'depth': trial.suggest_int('depth', 2, 10),
+            'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-8, 10.0, log=True), 
+            'random_strength': trial.suggest_float('random_strength', 1e-8, 10.0, log=True),
+            'verbose': 0, 
+            'random_state': 42
+        }
+
+        pipeline = make_pipeline(
+            MultiOutputRegressor(cb.CatBoostRegressor(**params))
+        )
+        
+        scores = cross_val_score(
+            pipeline,
+            X_train,
+            y_train,
+            cv=3,
+            scoring='r2',
+            n_jobs=-1
+        )
+        
+        return scores.mean()
+
+    print(f"Iniciando a otimização com Optuna...")
+    study = optuna.create_study(direction='maximize')
+    study.optimize(objective, n_trials=n_trials)
+
+    print("\nOtimização concluída.")
+    print(f"Melhores parâmetros encontrados: {study.best_params}")
+    print(f"Melhor R² (média do cross validation): {study.best_value:.4f}")
+    
+    print("\nRetreinando o modelo com os melhores parâmetros...")
+    best_params = study.best_params
+    best_pipeline = make_pipeline(
+        MultiOutputRegressor(cb.CatBoostRegressor(**best_params, verbose=0, random_state=42))
     )
     best_pipeline.fit(X_train, y_train)
     print("Modelo final treinado com sucesso.\n")
