@@ -5,6 +5,11 @@ from src.multi_output_training import (train_ridge_regression,
 train_random_forest, train_lgbm, train_catboost)
 from src.evaluation import evaluate_model_performance, save_results, save_model
 
+""" 
+Script que permite rodar vários experimentos da abordagem 
+"multi_output", variando o dataset de treinamento e o modelo.
+"""
+
 def main(args):
 
     # definindo o caminho do dataset
@@ -75,7 +80,7 @@ def main(args):
     )
     
     # Salvar o objeto do modelo treinado
-    model_path = f'../models/multi_output/{args.model_name}_multi_output.joblib'
+    model_path = f'../models/{args.dataset_name}/{args.model_name}_multi_output.joblib'
     save_model(
         model=best_model,
         filepath=model_path

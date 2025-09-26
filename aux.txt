@@ -1,21 +1,21 @@
-Primeiramente devo trocar o randomsearch por optuna, depois:
-
-Fase 1: terminar a implementação com MultiOutputRegressor
-- Testar Ridge (feito)
-- Testar RandomForestRegressor (feito)
-- Testar LGBMRegressor com MultiOutputRegressor (feito)
-- Testar CatBoostRegressor com MultiOutputRegressor ()
+MultiOutputRegressor:
+    - Testar Ridge (birds, medical, enron, yeast, scene)
+    - Testar RandomForestRegressor (birds, medical, enron, yeast, scene)
+    - Testar LGBMRegressor (birds, medical, enron, yeast, scene)
+    - Testar CatBoostRegressor (birds, medical, enron, yeast, scene)
 
 Fase 2: Investigar a Correlação entre os Alvos com RegressorChain
-- Testar RandomForestRegressor com RegressorChain
-- Testar LGBMRegressor com RegressorChain
+-Implementar:
+    - Testar RandomForestRegressor com RegressorChain
+    - Testar LGBMRegressor com RegressorChain
 
 Fase 3: Testar Modelos com Adaptação Nativa e Abordagens Alternativas
-- Testar RandomForestRegressor (Nativo)
-- Testar KNeighborsRegressor (Nativo)
-- Testar LGBM (nativo)
-- Testar catboost (nativo)
-- Testar MLPRegressor
+implementar:
+    - Testar RandomForestRegressor (Nativo)
+    - Testar KNeighborsRegressor (Nativo)
+    - Testar LGBM (nativo)
+    - Testar catboost (nativo)
+    - Testar MLPRegressor
 
 Fase 4:
 4.1. Análise Comparativa dos Resultados

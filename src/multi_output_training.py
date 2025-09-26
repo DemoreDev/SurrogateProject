@@ -207,6 +207,7 @@ def train_lgbm(
 
 #------------------------------------------------------------------------------------------------------------
 
+# Utiliza optuna
 def train_catboost(
     X_train: pd.DataFrame, 
     y_train: pd.DataFrame,
