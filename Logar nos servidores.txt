@@ -1,0 +1,24 @@
+Logar nos servidores:
+ssh bio02
+ssh bio03
+
+Para criar uma sessão:
+    tmux new -s nome_da_sessao
+    
+Detach: 
+    Apertar "Ctrl + B", depois "D"
+    
+Entrar em uma sessão:
+    tmux a -t nome_da_sessão
+    
+Matar sessão:
+    tmux kill-session -t nome_da_sessao
+    
+UPAR ARQUIVOS:
+scp ~/Documentos/server/meuarquivo.py bio02:~/meuprojeto/scripts/
+
+BAIXAR OS CSV:
+scp bio02:~/meuprojeto/results/meuarquivo.csv ~/Documentos/server/
+
+BAIXAR OS MODELOS:
+scp bio02:~/meuprojeto/models/meuarquivo.joblib ~/Documentos/server/
