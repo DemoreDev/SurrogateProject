@@ -1,6 +1,6 @@
 MultiOutputRegressor:
-    - Testar Ridge (birds, medical, enron, yeast, scene)
-    - Testar RandomForestRegressor (birds, medical, enron, yeast, scene)
+    - Testar Ridge (feito)
+    - Testar RandomForestRegressor (medical, enron, yeast, scene)
     - Testar LGBMRegressor (birds, medical, enron, yeast, scene)
     - Testar CatBoostRegressor (birds, medical, enron, yeast, scene)
 
