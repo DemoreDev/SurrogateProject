@@ -1,7 +1,7 @@
 MultiOutputRegressor:
     - Testar Ridge (feito)
     - Testar RandomForestRegressor (feito)
-    - Testar LGBMRegressor (birds, medical, enron, yeast, scene)
+    - Testar LGBMRegressor (feito)
     - Testar CatBoostRegressor (birds, medical, enron, yeast, scene)
 
 Fase 2: Investigar a Correlação entre os Alvos com RegressorChain

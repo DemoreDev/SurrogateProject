@@ -96,7 +96,7 @@ if __name__ == '__main__':
         '--model_name', 
         type=str, 
         required=True,
-        choices=['ridge', 'random_forest', 'lgbm'], # Adicione aqui os nomes dos novos modelos
+        choices=['ridge', 'random_forest', 'lgbm', 'catboost'], # Adicione aqui os nomes dos novos modelos
         help="O nome do modelo a ser treinado."
     )
     parser.add_argument(
