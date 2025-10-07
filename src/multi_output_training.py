@@ -238,6 +238,7 @@ def train_catboost(
             'depth': trial.suggest_int('depth', 2, 10),
             'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-8, 10.0, log=True), 
             'random_strength': trial.suggest_float('random_strength', 1e-8, 10.0, log=True),
+            'allow_writing_files': False,
             'verbose': 0, 
             'random_state': 42
         }
@@ -268,7 +269,7 @@ def train_catboost(
     print("\nRetreinando o modelo com os melhores parâmetros...")
     best_params = study.best_params
     best_pipeline = make_pipeline(
-        MultiOutputRegressor(cb.CatBoostRegressor(**best_params, verbose=0, random_state=42))
+        MultiOutputRegressor(cb.CatBoostRegressor(**best_params, allow_writing_files=False, verbose=0, random_state=42))
     )
     best_pipeline.fit(X_train, y_train)
     print("Modelo final treinado com sucesso.\n")
