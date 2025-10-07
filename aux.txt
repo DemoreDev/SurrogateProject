@@ -3,11 +3,13 @@ MultiOutputRegressor:
     - Testar RandomForestRegressor (feito)
     - Testar LGBMRegressor (feito)
     - Testar CatBoostRegressor (birds, medical, enron, yeast, scene)
+    - Testar XGBoostRegressor (birds, medical, enron, yeast, scene)
 
 Fase 2: Investigar a Correlação entre os Alvos com RegressorChain
 -Implementar:
     - Testar RandomForestRegressor com RegressorChain (birds, medical, enron, yeast, scene)
     - Testar LGBMRegressor com RegressorChain (birds, medical, enron, yeast, scene)
+    - Testar XGBoostRegressor com RegressorCHain (birds, medical, enron, yeast, scene)
 
 Fase 3: Testar Modelos com Adaptação Nativa e Abordagens Alternativas
 implementar:
@@ -16,8 +18,11 @@ implementar:
     - Testar LGBM (birds, medical, enron, yeast, scene)
     - Testar catboost (birds, medical, enron, yeast, scene)
     - Testar MLPRegressor (birds, medical, enron, yeast, scene)
+    - Testar XGBoostRegressor (birds, medical, enron, yeast, scene)
 
 Fase 4:
+4.0  Como passo final da modelagem, crie um StackingRegressor usando os seus 3 melhores modelos encontrados na etapa anterior. Compare a performance deste "super modelo" com a dos modelos individuais.
+
 4.1. Análise Comparativa dos Resultados
     Ação: Carregar o arquivo reports/model_comparison.csv em um DataFrame do Pandas. Ordenar os modelos pelo R² Médio (ou outra métrica de sua escolha) para eleger o "modelo campeão". Gerar gráficos comparativos.
     Objetivo: Ter uma visão clara e quantitativa de qual abordagem e modelo funcionaram melhor.

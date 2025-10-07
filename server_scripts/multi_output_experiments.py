@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.multi_output_training import (train_ridge_regression, 
-train_random_forest, train_lgbm, train_catboost)
+train_random_forest, train_lgbm, train_catboost, train_xgboost)
 from src.evaluation import evaluate_model_performance, save_results, save_model
 
 """ 
@@ -55,9 +55,16 @@ def main(args):
             y_train=y_train, 
             n_trials=50
         )
+
+    elif args.model_name == 'xgboost':
+        best_model, best_params, _ = train_xgboost(
+            X_train=X_train, 
+            y_train=y_train, 
+            n_trials=50
+        )
         
     else:
-        raise ValueError(f"Modelo '{args.model_name}' não reconhecido. Opções: ridge, random_forest, lgbm, catboost")
+        raise ValueError(f"Modelo '{args.model_name}' não reconhecido. Opções: ridge, random_forest, lgbm, catboost, xgboost")
 
     # Obtendo métricas
     print(f"\nAvaliação do Modelo: {args.model_name.upper()}")
@@ -96,7 +103,7 @@ if __name__ == '__main__':
         '--model_name', 
         type=str, 
         required=True,
-        choices=['ridge', 'random_forest', 'lgbm', 'catboost'], # Adicione aqui os nomes dos novos modelos
+        choices=['ridge', 'random_forest', 'lgbm', 'catboost', 'xgboost'], 
         help="O nome do modelo a ser treinado."
     )
     parser.add_argument(
