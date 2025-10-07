@@ -3,6 +3,7 @@ import optuna
 import lightgbm as lgb
 import catboost as cb
 import xgboost as xgb
+import os
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
@@ -50,7 +51,7 @@ def train_ridge_regression(
         param_grid=grid, # conjunto de valores a testar
         cv=3, # quantidade de folds
         scoring='r2', # métrica de avaliação
-        n_jobs=-1, # Usa todo o poder de processamento
+        n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos,
         verbose=1 # Mostra o progresso 
     )
 
@@ -111,7 +112,7 @@ def train_random_forest(
             y=y_train,
             cv=3,
             scoring='r2',
-            n_jobs=-1
+            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
         )
         
         # Retornar o score médio, que o Optuna tentará maximizar
@@ -183,7 +184,7 @@ def train_lgbm(
             y=y_train,
             cv=3,
             scoring='r2',
-            n_jobs=-1
+            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
         )
         
         return scores.mean()
@@ -251,7 +252,7 @@ def train_catboost(
             y_train,
             cv=3,
             scoring='r2',
-            n_jobs=-1
+            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
         )
         
         return scores.mean()
@@ -321,7 +322,7 @@ def train_xgboost(
             y_train,
             cv=3,
             scoring='r2',
-            n_jobs=-1
+            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
         )
         
         return scores.mean()

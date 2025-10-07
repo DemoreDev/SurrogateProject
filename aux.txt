@@ -1,8 +1,10 @@
+python multi_output_experiments.py --model_name ... --dataset_name ...
+
 MultiOutputRegressor:
     - Testar Ridge (feito)
     - Testar RandomForestRegressor (feito)
     - Testar LGBMRegressor (feito)
-    - Testar CatBoostRegressor (birds, medical, enron, yeast, scene)
+    - Testar CatBoostRegressor (medical, enron, yeast, scene)
     - Testar XGBoostRegressor (birds, medical, enron, yeast, scene)
 
 Fase 2: Investigar a Correlação entre os Alvos com RegressorChain
