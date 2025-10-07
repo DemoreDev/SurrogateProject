@@ -51,7 +51,7 @@ def train_ridge_regression(
         param_grid=grid, # conjunto de valores a testar
         cv=3, # quantidade de folds
         scoring='r2', # métrica de avaliação
-        n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos,
+        n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos,
         verbose=1 # Mostra o progresso 
     )
 
@@ -112,7 +112,7 @@ def train_random_forest(
             y=y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
+            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
         )
         
         # Retornar o score médio, que o Optuna tentará maximizar
@@ -184,7 +184,7 @@ def train_lgbm(
             y=y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
+            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
         )
         
         return scores.mean()
@@ -253,7 +253,7 @@ def train_catboost(
             y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
+            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
         )
         
         return scores.mean()
@@ -323,7 +323,7 @@ def train_xgboost(
             y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 2,  # usa metade dos núcleos
+            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
         )
         
         return scores.mean()
