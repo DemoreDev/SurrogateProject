@@ -1,9 +1,15 @@
+import os
+n_cores = os.cpu_count() // 4
+os.environ["OMP_NUM_THREADS"] = str(n_cores)
+os.environ["MKL_NUM_THREADS"] = str(n_cores)
+os.environ["NUMEXPR_NUM_THREADS"] = str(n_cores)
+# limita o uso do servidor a 1/4 (no máximo)
+
 import pandas as pd
 import optuna
 import lightgbm as lgb
 import catboost as cb
 import xgboost as xgb
-import os
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
@@ -51,7 +57,7 @@ def train_ridge_regression(
         param_grid=grid, # conjunto de valores a testar
         cv=3, # quantidade de folds
         scoring='r2', # métrica de avaliação
-        n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos,
+        n_jobs=1, # Roda de forma sequencial
         verbose=1 # Mostra o progresso 
     )
 
@@ -112,7 +118,7 @@ def train_random_forest(
             y=y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
+            n_jobs=1 # Roda de forma sequencial
         )
         
         # Retornar o score médio, que o Optuna tentará maximizar
@@ -120,7 +126,7 @@ def train_random_forest(
 
     print(f"Iniciando a otimização com Optuna...")
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=n_trials)
+    study.optimize(objective, n_trials=n_trials, n_jobs=1)
 
     print("\nOtimização concluída.")
     print(f"Melhores parâmetros encontrados: {study.best_params}")
@@ -184,14 +190,14 @@ def train_lgbm(
             y=y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
+            n_jobs=1 # Roda de forma sequencial
         )
         
         return scores.mean()
 
     print(f"Iniciando a otimização com Optuna...")
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=n_trials)
+    study.optimize(objective, n_trials=n_trials, n_jobs=1)
 
     print("\nOtimização concluída.")
     print(f"Melhores parâmetros encontrados: {study.best_params}")
@@ -253,14 +259,14 @@ def train_catboost(
             y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
+            n_jobs=1 # Roda de forma sequencial
         )
         
         return scores.mean()
 
     print(f"Iniciando a otimização com Optuna...")
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=n_trials)
+    study.optimize(objective, n_trials=n_trials, n_jobs=1)
 
     print("\nOtimização concluída.")
     print(f"Melhores parâmetros encontrados: {study.best_params}")
@@ -323,14 +329,14 @@ def train_xgboost(
             y_train,
             cv=3,
             scoring='r2',
-            n_jobs=os.cpu_count() // 8,  # usa metade dos núcleos
+            n_jobs=1 # Roda de forma sequencial
         )
         
         return scores.mean()
 
     print(f"Iniciando a otimização com Optuna...")
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=n_trials)
+    study.optimize(objective, n_trials=n_trials, n_jobs=1)
 
     print("\nOtimização concluída.")
     print(f"Melhores parâmetros encontrados: {study.best_params}")
