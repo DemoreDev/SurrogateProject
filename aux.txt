@@ -4,8 +4,8 @@ MultiOutputRegressor:
     - Testar Ridge (feito)
     - Testar RandomForestRegressor (feito)
     - Testar LGBMRegressor (feito)
-    - Testar CatBoostRegressor (yeast, scene)
-    - Testar XGBoostRegressor (birds, medical, enron, yeast, scene)
+    - Testar CatBoostRegressor (feito)
+    - Testar XGBoostRegressor (feito)
 
 Fase 2: Investigar a Correlação entre os Alvos com RegressorChain
 -Implementar:
@@ -23,7 +23,7 @@ implementar:
     - Testar XGBoostRegressor (birds, medical, enron, yeast, scene)
 
 Fase 4:
-4.0  Como passo final da modelagem, crie um StackingRegressor usando os seus 3 melhores modelos encontrados na etapa anterior. Compare a performance deste "super modelo" com a dos modelos individuais.
+4.0  Como passo final da modelagem, criar um StackingRegressor usando os 3 melhores modelos e comparar sua performance
 
 4.1. Análise Comparativa dos Resultados
     Ação: Carregar o arquivo reports/model_comparison.csv em um DataFrame do Pandas. Ordenar os modelos pelo R² Médio (ou outra métrica de sua escolha) para eleger o "modelo campeão". Gerar gráficos comparativos.
