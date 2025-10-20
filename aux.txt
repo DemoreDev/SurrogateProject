@@ -1,4 +1,6 @@
 python multi_output_experiments.py --model_name ... --dataset_name ...
+python regressor_experiments.py --model_name ... --dataset_name ...
+python native_experiments.py --model_name ... --dataset_name ...
 
 MultiOutputRegressor:
     - Testar Ridge (feito)
@@ -7,13 +9,12 @@ MultiOutputRegressor:
     - Testar CatBoostRegressor (feito)
     - Testar XGBoostRegressor (feito)
 
-Fase 2: Investigar a Correlação entre os Alvos com RegressorChain
--Implementar:
-    - Testar RandomForestRegressor com RegressorChain (birds, medical, enron, yeast, scene)
+RegressorChain
+    - Testar RandomForestRegressor com RegressorChain (feito)
     - Testar LGBMRegressor com RegressorChain (birds, medical, enron, yeast, scene)
     - Testar XGBoostRegressor com RegressorCHain (birds, medical, enron, yeast, scene)
 
-Fase 3: Testar Modelos com Adaptação Nativa e Abordagens Alternativas
+Adaptação Nativa e Abordagens Alternativas
 implementar:
     - Testar RandomForestRegressor (birds, medical, enron, yeast, scene)
     - Testar KNeighborsRegressor (birds, medical, enron, yeast, scene)
@@ -22,14 +23,17 @@ implementar:
     - Testar MLPRegressor (birds, medical, enron, yeast, scene)
     - Testar XGBoostRegressor (birds, medical, enron, yeast, scene)
 
-Fase 4:
-4.0  Como passo final da modelagem, criar um StackingRegressor usando os 3 melhores modelos e comparar sua performance
+Opcional:
+    Criar um StackingRegressor usando os melhores modelos e comparar sua performance
 
-4.1. Análise Comparativa dos Resultados
-    Ação: Carregar o arquivo reports/model_comparison.csv em um DataFrame do Pandas. Ordenar os modelos pelo R² Médio (ou outra métrica de sua escolha) para eleger o "modelo campeão". Gerar gráficos comparativos.
-    Objetivo: Ter uma visão clara e quantitativa de qual abordagem e modelo funcionaram melhor.
+4.1. Análise Comparativa dos Resultados:
+    - Carregar os arquivos reports/model_comparison_{}.csv. Ordenar os modelos pelo R² Médio
+    para eleger o "modelo campeão". Gerar gráficos comparativos para ter uma visão clara 
+    e quantitativa de qual abordagem e modelo funcionaram melhor.
 
-4.2. Análise de Explicabilidade (SHAP) no Modelo Campeão
-    Status: Já temos o código base para a análise SHAP.
-    Ação: Carregar o modelo campeão salvo (arquivo .joblib) e aplicar a análise SHAP completa nele.
-    Objetivo: Entender por que o melhor modelo toma suas decisões. Gerar insights acionáveis, como "Quais são as 3 configurações mais importantes para maximizar o F1-score?".
+4.2. Análise de Explicabilidade (SHAP) no Modelo Campeão:
+    - Já tenho o código base para a análise SHAP; 
+    Carregar o modelo campeão (arquivo .joblib) e aplicar a análise SHAP.
+    Objetivo: Entender por que o melhor modelo toma suas decisões. 
+    Gerar insights acionáveis, como "Quais são as 3 configurações mais importantes para maximizar o F1-score?.
+    Testar estes insights nos datasets "raw", para verificar se funcionam

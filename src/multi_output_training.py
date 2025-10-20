@@ -175,7 +175,8 @@ def train_lgbm(
             'max_depth': trial.suggest_int('max_depth', 5, 20),
             'reg_alpha': trial.suggest_float('reg_alpha', 1e-8, 1.0, log=True),
             'reg_lambda': trial.suggest_float('reg_lambda', 1e-8, 1.0, log=True),
-            'random_state': 42
+            'random_state': 42,
+            'verbose':1
         }
 
         # Construir o pipeline com os hiperparâmetros sugeridos
@@ -206,7 +207,7 @@ def train_lgbm(
     print("\nRetreinando o modelo com os melhores parâmetros...")
     best_params = study.best_params
     best_pipeline = make_pipeline(
-        MultiOutputRegressor(lgb.LGBMRegressor(**best_params, random_state=42))
+        MultiOutputRegressor(lgb.LGBMRegressor(**best_params, random_state=42, verbose=1))
     )
     best_pipeline.fit(X_train, y_train)
     print("Modelo final treinado com sucesso.\n")
