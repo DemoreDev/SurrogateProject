@@ -11,8 +11,8 @@ MultiOutputRegressor:
 
 RegressorChain
     - Testar RandomForestRegressor com RegressorChain (feito)
-    - Testar LGBMRegressor com RegressorChain (birds, medical, enron, yeast, scene)
-    - Testar XGBoostRegressor com RegressorCHain (birds, medical, enron, yeast, scene)
+    - Testar LGBMRegressor com RegressorChain (feito)
+    - Testar XGBoostRegressor com RegressorCHain (feito)
 
 Adaptação Nativa e Abordagens Alternativas
 implementar:
