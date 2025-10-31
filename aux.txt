@@ -16,10 +16,11 @@ RegressorChain
 
 Adaptação Nativa e Abordagens Alternativas
 implementar:
+      FAZER O MAIN_WORKFLOW
     - Testar RandomForestRegressor (birds, medical, enron, yeast, scene)
     - Testar KNeighborsRegressor (birds, medical, enron, yeast, scene)
     - Testar LGBM (birds, medical, enron, yeast, scene)
-    - Testar catboost (birds, medical, enron, yeast, scene)
+    - Testar CatBoost (birds, medical, enron, yeast, scene)
     - Testar MLPRegressor (birds, medical, enron, yeast, scene)
     - Testar XGBoostRegressor (birds, medical, enron, yeast, scene)
 
