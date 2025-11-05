@@ -17,7 +17,7 @@ RegressorChain
 Adaptação Nativa e Abordagens Alternativas
 implementar:
     - Testar RandomForestRegressor (feito)
-    - Testar KNeighborsRegressor (yeast, scene)
+    - Testar KNeighborsRegressor (feito)
     - Testar LGBM (birds, medical, enron, yeast, scene)
     - Testar CatBoost (birds, medical, enron, yeast, scene)
     - Testar MLPRegressor (birds, medical, enron, yeast, scene)
