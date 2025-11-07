@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.native_training import (train_rf_native, train_knn_native, 
-train_lgbm_native, train_catboost_native, train_xgb_native, train_mlp_native)
+                                 train_catboost_native, train_mlp_native)
 from src.evaluation import evaluate_model_performance, save_results, save_model
 
 """ 
@@ -39,23 +39,9 @@ def main(args):
             y_train=y_train, 
             n_trials=50
         )
-    
-    elif args.model_name == 'lgbm':
-        best_model, best_params, _ = train_lgbm_native(
-            X_train=X_train, 
-            y_train=y_train, 
-            n_trials=50
-        )
 
     elif args.model_name == 'catboost':
         best_model, best_params, _ = train_catboost_native(
-            X_train=X_train, 
-            y_train=y_train, 
-            n_trials=50
-        )
-
-    elif args.model_name == 'xgboost':
-        best_model, best_params, _ = train_xgb_native(
             X_train=X_train, 
             y_train=y_train, 
             n_trials=50
@@ -69,8 +55,8 @@ def main(args):
         )
         
     else:
-        raise ValueError(f"Modelo '{args.model_name}' não reconhecido. Opções: random_forest, knn, " 
-                        "lgbm, catboost, xgboost, mlp")
+        raise ValueError(f"Modelo '{args.model_name}' não reconhecido. Opções: " 
+                        "random_forest, knn, catboost, mlp")
 
     # Obtendo métricas
     print(f"\nAvaliação do Modelo: {args.model_name.upper()}")
@@ -109,7 +95,7 @@ if __name__ == '__main__':
         '--model_name', 
         type=str, 
         required=True,
-        choices=['random_forest', 'knn', 'lgbm', 'catboost', 'xgboost', 'mlp'], 
+        choices=['random_forest', 'knn', 'catboost', 'mlp'], 
         help="O nome do modelo a ser treinado."
     )
     parser.add_argument(

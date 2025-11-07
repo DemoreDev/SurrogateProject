@@ -9,8 +9,6 @@ import pandas as pd
 import optuna
 from typing import Tuple, Dict, Any
 
-import lightgbm as lgb
-import xgboost as xgb
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 import catboost as cb
@@ -169,76 +167,6 @@ def train_knn_native(
 
 #------------------------------------------------------------------------------------------------------------
 
-def train_lgbm_native(
-    X_train: pd.DataFrame, 
-    y_train: pd.DataFrame,
-    n_trials: int = 50  
-) -> Tuple[Any, Dict, optuna.study.Study]:
-    """
-    Cria, otimiza e treina um modelo LightGBM Nativo
-
-    Args:
-        X_train (pd.DataFrame): DataFrame com as features 
-        y_train (pd.DataFrame): DataFrame com os targets 
-        n_trials (int): Número de combinações de hiperparâmetros a serem testados pelo Optuna
-
-    Returns:
-        Tuple[Any, Dict, optuna.study.Study]: Uma tupla contendo:
-            - O melhor modelo (pipeline) treinado com todos os dados de treino.
-            - O dicionário com os melhores hiperparâmetros encontrados.
-            - O objeto de estudo completo do Optuna para análises futuras.
-    """
-
-    def objective(trial: optuna.Trial) -> float:
-        
-        # Definir o espaço de busca de hiperparâmetros
-        params = {
-            'n_estimators': trial.suggest_int('n_estimators', 200, 1000),
-            'learning_rate': trial.suggest_float('learning_rate', 1e-3, 0.1, log=True),
-            'num_leaves': trial.suggest_int('num_leaves', 20, 60),
-            'max_depth': trial.suggest_int('max_depth', 5, 20),
-            'reg_alpha': trial.suggest_float('reg_alpha', 1e-8, 1.0, log=True), # L1
-            'reg_lambda': trial.suggest_float('reg_lambda', 1e-8, 1.0, log=True), # L2
-            'random_state': 42,
-            'verbose': -1 # Silencia completamente a saida
-        }
-
-        # O LGBMRegressor é usado diretamente no pipeline
-        pipeline = make_pipeline(
-            lgb.LGBMRegressor(**params) 
-        )
-        
-        scores = cross_val_score(
-            pipeline,
-            X=X_train,
-            y=y_train,
-            cv=3,
-            scoring='r2',
-            n_jobs=1
-        )
-        
-        return scores.mean()
-
-    print(f"Iniciando a otimização com Optuna...")
-    study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=n_trials, n_jobs=1) 
-
-    print("\nOtimização concluída.")
-    print(f"Melhores parâmetros encontrados: {study.best_params}")
-    print(f"Melhor R² (média do cross validation): {study.best_value:.4f}")
-
-    print("\nRetreinando o modelo com os melhores parâmetros...")
-    best_params = study.best_params
-    best_pipeline = make_pipeline(
-        lgb.LGBMRegressor(**best_params, random_state=42, verbose=-1)
-    )
-    best_pipeline.fit(X_train, y_train)
-    print("Modelo final treinado com sucesso.\n")
-
-    return best_pipeline, study.best_params, study
-
-#------------------------------------------------------------------------------------------------------------
-
 def train_catboost_native(
     X_train: pd.DataFrame, 
     y_train: pd.DataFrame,
@@ -267,6 +195,8 @@ def train_catboost_native(
             'depth': trial.suggest_int('depth', 2, 10),
             'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-8, 10.0, log=True), 
             'random_strength': trial.suggest_float('random_strength', 1e-8, 10.0, log=True),
+            'loss_function': 'MultiRMSE', 
+            'eval_metric': 'MultiRMSE',
             'allow_writing_files': False,
             'verbose': 0, 
             'random_state': 42
@@ -298,76 +228,11 @@ def train_catboost_native(
     print("\nRetreinando o modelo com os melhores parâmetros...")
     best_params = study.best_params
     best_pipeline = make_pipeline(
-        cb.CatBoostRegressor(**best_params, allow_writing_files=False, verbose=0, random_state=42)
-    )
-    best_pipeline.fit(X_train, y_train)
-    print("Modelo final treinado com sucesso.\n")
-
-    return best_pipeline, study.best_params, study
-
-#------------------------------------------------------------------------------------------------------------
-
-def train_xgb_native(
-    X_train: pd.DataFrame, 
-    y_train: pd.DataFrame,
-    n_trials: int = 50 
-) -> Tuple[Any, Dict, optuna.study.Study]:
-    """
-    Cria, otimiza e treina um modelo XGBoost Nativo
-
-    Args:
-        X_train (pd.DataFrame): DataFrame com as features
-        y_train (pd.DataFrame): DataFrame com os targets 
-        n_trials (int): Número de combinações a serem testadas pelo Optuna
-
-    Returns:
-        Tuple[Any, Dict, optuna.study.Study]: Uma tupla contendo:
-            - O melhor modelo (pipeline) treinado.
-            - O dicionário com os melhores hiperparâmetros.
-            - O objeto de estudo completo do Optuna.
-    """
-    def objective(trial: optuna.Trial) -> float:
-        
-        # Definir o espaço de busca de hiperparâmetros 
-        params = {
-            'n_estimators': trial.suggest_int('n_estimators', 200, 1000),
-            'learning_rate': trial.suggest_float('learning_rate', 1e-3, 0.1, log=True),
-            'max_depth': trial.suggest_int('max_depth', 3, 10),
-            'subsample': trial.suggest_float('subsample', 0.6, 1.0),
-            'colsample_bytree': trial.suggest_float('colsample_bytree', 0.6, 1.0),
-            'reg_lambda': trial.suggest_float('reg_lambda', 1e-8, 10.0, log=True), 
-            'gamma': trial.suggest_float('gamma', 1e-8, 1.0, log=True),
-            'verbosity': 0,  
-            'random_state': 42
-        }
-
-        pipeline = make_pipeline(
-            xgb.XGBRegressor(**params)
-        )
-        
-        scores = cross_val_score(
-            pipeline,
-            X_train,
-            y_train,
-            cv=3,
-            scoring='r2',
-            n_jobs=1 
-        )
-        
-        return scores.mean()
-
-    print(f"Iniciando a otimização com Optuna...")
-    study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=n_trials, n_jobs=1)
-
-    print("\nOtimização concluída.")
-    print(f"Melhores parâmetros encontrados: {study.best_params}")
-    print(f"Melhor R² (média do cross validation): {study.best_value:.4f}")
-
-    print("\nRetreinando o modelo com os melhores parâmetros...")
-    best_params = study.best_params
-    best_pipeline = make_pipeline(
-        xgb.XGBRegressor(**best_params, verbosity=0, random_state=42)
+        cb.CatBoostRegressor(**best_params, 
+                             loss_function='MultiRMSE', 
+                             allow_writing_files=False, 
+                             verbose=0, 
+                             random_state=42)
     )
     best_pipeline.fit(X_train, y_train)
     print("Modelo final treinado com sucesso.\n")
