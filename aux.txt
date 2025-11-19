@@ -18,8 +18,8 @@ Adaptação Nativa e Abordagens Alternativas
 implementar:
     - Testar RandomForestRegressor (feito)
     - Testar KNeighborsRegressor (feito)
-    - Testar CatBoost (enron, yeast, scene)
-    - Testar MLPRegressor (birds, medical, enron, yeast, scene)
+    - Testar CatBoost (feito)
+    - Testar MLPRegressor (yeast, scene)
 
 Opcional:
     Criar um StackingRegressor usando os melhores modelos e comparar sua performance
