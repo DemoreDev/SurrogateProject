@@ -21,9 +21,6 @@ implementar:
     - Testar CatBoost (feito)
     - Testar MLPRegressor (feito)
 
-Opcional:
-    Criar um StackingRegressor usando os melhores modelos e comparar sua performance
-
 4.1. Análise Comparativa dos Resultados:
     - Carregar os arquivos reports/model_comparison_{}.csv. Ordenar os modelos pelo R² Médio
     para eleger o "modelo campeão". Gerar gráficos comparativos para ter uma visão clara 
