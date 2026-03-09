@@ -4,6 +4,14 @@ python native_experiments.py --model_name ... --dataset_name ...
 
 ----------------------------------------------------------------------------------
 
+
+
+CORRIGIR EXPERIMENTOS E MODEL SELECTION
+
+
+
+
+
 MultiOutputRegressor:
     - Testar Ridge (feito)
     - Testar RandomForestRegressor (feito)
