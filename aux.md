@@ -1,37 +1,37 @@
-python multi_output_experiments.py --model_name ... --dataset_name ...
-python regressor_experiments.py --model_name ... --dataset_name ...
-python native_experiments.py --model_name ... --dataset_name ...
+## Abordagens e modelos escolhidos para treinar:
+- MultiOutputRegressor:
+    - Ridge 
+    - RandomForestRegressor 
+    - LGBMRegressor 
+    - CatBoostRegressor 
+    - XGBoostRegressor 
+
+- RegressorChain
+    - RandomForestRegressor 
+    - LGBMRegressor 
+    - XGBoostRegressor
+
+- Adaptação Nativa e Abordagens Alternativas:
+    - RandomForestRegressor 
+    - KNeighborsRegressor 
+    - CatBoost
+    - MLPRegressor
+
+
+## Como rodar os experimentos no terminal:
+
+`python multi_output_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset`
+
+`python regressor_chain_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset`
+
+`python native_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset`
+
 
 ----------------------------------------------------------------------------------
+## A seguir:
 
-
-
-CORRIGIR EXPERIMENTOS E MODEL SELECTION
-
-
-
-
-
-MultiOutputRegressor:
-    - Testar Ridge (feito)
-    - Testar RandomForestRegressor (feito)
-    - Testar LGBMRegressor (feito)
-    - Testar CatBoostRegressor (feito)
-    - Testar XGBoostRegressor (feito)
-
-RegressorChain
-    - Testar RandomForestRegressor com RegressorChain (feito)
-    - Testar LGBMRegressor com RegressorChain (feito)
-    - Testar XGBoostRegressor com RegressorCHain (feito)
-
-Adaptação Nativa e Abordagens Alternativas
-implementar:
-    - Testar RandomForestRegressor (feito)
-    - Testar KNeighborsRegressor (feito)
-    - Testar CatBoost (feito)
-    - Testar MLPRegressor (feito)
-
-----------------------------------------------------------------------------------
+- refazer o notebook model_training e pre_processing
+- começar o exploring_results
 
 - Validação "In-Loco" 
 Objetivo: Provar que o modelo treinado no Birds 

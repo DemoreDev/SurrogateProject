@@ -8,9 +8,8 @@ import warnings
 # Ignorar avisos de versões do sklearn (carregar joblibs)
 warnings.filterwarnings("ignore")
 
-# --- Função para medir a performance ---
-
-# Carrega o modelo, mede o tamanho em disco e o tempo médio de inferência.
+# Função para medir a performance de um modelo:
+# carrega o modelo, mede o tamanho em disco e o tempo médio de inferência.
 def measure_performance(archive_path):
     n_features_default = 207
     try:
@@ -46,11 +45,8 @@ def measure_performance(archive_path):
         
     except Exception as e:
         return None, None
-    
-# --------------------------------------------
 
-# --- Loop Principal ---
-# Cria a pasta de saída se não existir
+# Loop Principal 
 os.makedirs("./ranking", exist_ok=True)
 ready_dfs = []
 datasets = ["birds", "enron", "medical", "scene", "yeast"]
