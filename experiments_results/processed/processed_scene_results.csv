@@ -1,12 +1,12 @@
-Model_Name,R2_F1,R2_ModelSize_Log,RMSE_F1,RMSE_ModelSize_Log,Disk_Size_mb,Inference_time,Dataset_Source,Weighted_Score
-xgboost_multi_output,0.9627,0.996,0.0277,0.1441,25.1796,0.032402,scene,0.9743550000000001
-xgboost_regressor_chain,0.9608,0.9948,0.0284,0.163,28.7287,0.0984,scene,0.9726999999999999
-catboost_multi_output,0.96,0.9961,0.0287,0.1421,23.9003,0.003136,scene,0.9726349999999999
-lgbm_regressor_chain,0.9578,0.9951,0.0295,0.1583,10.9199,0.031786,scene,0.9708549999999999
-lgbm_multi_output,0.9536,0.9957,0.0309,0.1492,6.3988,0.012395,scene,0.9683350000000001
-mlp_native,0.8923,0.9937,0.047,0.1808,0.9239,0.000501,scene,0.92779
-random_forest_multi_output,0.8753,0.9845,0.0506,0.2831,6761.4068,0.169973,scene,0.9135200000000001
-random_forest_regressor_chain,0.8754,0.9843,0.0506,0.2847,6630.5735,0.501751,scene,0.913515
-random_forest_native,0.7895,0.9849,0.0658,0.2795,3333.1774,0.044718,scene,0.85789
-knn_native,0.7152,0.9623,0.0765,0.4411,98.8052,0.01305,scene,0.801685
-ridge_multi_output,0.7005,0.9489,0.0784,0.5136,0.017,0.000928,scene,0.78744
+Model Name,Explicabilidade R2 para F1,Explicabilidade R2 para Model Size (Log),RMSE para F1,RMSE para Model Size (Log),Disk Size (mb),Inference time,Dataset
+xgboost_multi_output,0.9627,0.996,0.0277,0.1441,25.1796,0.001798,scene
+xgboost_regressor_chain,0.9608,0.9948,0.0284,0.163,28.7287,0.003404,scene
+catboost_multi_output,0.96,0.9961,0.0287,0.1421,23.9003,0.003353,scene
+lgbm_regressor_chain,0.9578,0.9951,0.0295,0.1583,10.9199,0.005282,scene
+lgbm_multi_output,0.9536,0.9957,0.0309,0.1492,6.3988,0.003302,scene
+mlp_native,0.8923,0.9937,0.047,0.1808,0.9239,0.000477,scene
+random_forest_regressor_chain,0.8754,0.9843,0.0506,0.2847,6630.5735,0.169752,scene
+random_forest_multi_output,0.8753,0.9845,0.0506,0.2831,6761.4068,0.087342,scene
+random_forest_native,0.7895,0.9849,0.0658,0.2795,3333.1774,0.023543,scene
+knn_native,0.7152,0.9623,0.0765,0.4411,98.8052,0.002331,scene
+ridge_multi_output,0.7005,0.9489,0.0784,0.5136,0.017,0.000526,scene

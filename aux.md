@@ -30,8 +30,7 @@
 ----------------------------------------------------------------------------------
 ## A seguir:
 
-- terminar o exploring results:
-    executar o script no servidor para obter os dataframes processados.
+- terminar o exploring results
 
 - Validação "In-Loco" 
 Objetivo: Provar que o modelo treinado no Birds 
