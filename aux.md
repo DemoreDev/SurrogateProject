@@ -30,7 +30,6 @@
 ----------------------------------------------------------------------------------
 ## A seguir:
 
-- refazer o notebook model_training e pre_processing
 - começar o exploring_results
 
 - Validação "In-Loco" 
