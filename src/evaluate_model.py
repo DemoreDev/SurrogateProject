@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
-from joblib import dump
 from typing import Any
+from joblib import dump
 from sklearn.metrics import mean_squared_error, r2_score
 
 # Avalia a performance de qualquer modelo usando RMSE e R2
