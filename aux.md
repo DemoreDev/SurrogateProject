@@ -29,11 +29,7 @@
 
 ----------------------------------------------------------------------------------
 ## A seguir:
-
-Terminar de importar os modelos do servidor (enron, scene, yeast)
-terminar o model_validation
-
-scp bio02:~/meuprojeto/all_models/enron/{lgbm_multi_output.joblib,xgboost_multi_output.joblib,mlp_native.joblib} ~/Documentos/enron/
+Concluir o notebook random_pipeline_gen (tirar conclusões)
 
 - Validação "In-Loco" 
 Objetivo: Provar que o modelo treinado no Birds 
