@@ -1,21 +1,25 @@
 import argparse
 import pandas as pd
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 from src.regressor_chain_training import train_regressor_chain
 from src.evaluate_model import evaluate_model_performance, save_results, save_model
 
-""" 
-Script que permite rodar vários experimentos da abordagem 
-"regressor_chain", variando o dataset de treinamento e o modelo.
-"""
+# Define a raiz do projeto
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 def main(args):
+    """ 
+    Esse script é responsável por treinar os modelos 
+    da abordagem 'regressor_chain'. Para isso basta passar 
+    como argumento o nome do modelo e o nome do conjunto de treinamento
+    """
 
-    # definindo o caminho do dataset
-    data_path = f"../data/meta/meta_processed/meta_proc_{args.dataset_name}.csv"
+    # Define o caminho do conjunto de treinamento
+    DATA_PATH = BASE_DIR / "data" / "meta" / "meta_processed" / f"meta_proc_{args.dataset_name}.csv"
     
     print("Lendo o Dataset...")
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(DATA_PATH)
     
     print("\nDividindo dados em treino e teste...")
 
@@ -65,7 +69,8 @@ def main(args):
         filepath=model_path
     )
     
-    print("\nExperimento Concluído com Sucesso!")
+    print(f"\nExperimento Concluído com Sucesso! O modelo {args.model_name} foi treinado!")
+    print(f"Conjunto usado para o treinamento: {args.dataset_name}")
 
 
 if __name__ == '__main__':

@@ -1,21 +1,25 @@
 import argparse
 import pandas as pd
+from pathlib import Path
 from sklearn.model_selection import train_test_split
-from src.native_training import train_native
+from src.multi_output_training import train_multi_output
 from src.evaluate_model import evaluate_model_performance, save_results, save_model
 
-""" 
-Script que permite rodar vários experimentos da abordagem 
-"native_adaptation", variando o dataset de treinamento e o modelo.
-"""
+# Define a raiz do projeto
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 def main(args):
+    """ 
+    Esse script é responsável por treinar os modelos 
+    da abordagem 'multi_output'. Para isso basta passar 
+    como argumento o nome do modelo e o nome do conjunto de treinamento
+    """
 
-    # definindo o caminho do dataset
-    data_path = f"../data/meta/meta_processed/meta_proc_{args.dataset_name}.csv"
+    # Define o caminho do conjunto de treinamento
+    DATA_PATH = BASE_DIR / "data" / "meta" / "meta_processed" / f"meta_proc_{args.dataset_name}.csv"
     
     print("Lendo o Dataset...")
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(DATA_PATH)
     
     print("\nDividindo dados em treino e teste...")
 
@@ -29,9 +33,9 @@ def main(args):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
     print(f"\nDivisao concluida! Treinando o modelo: {args.model_name.upper()}")
-    
+
     # Realiza o treinamento do modelo escolhido
-    best_model, best_params, _ = train_native(
+    best_model, best_params, _ = train_multi_output(
         model_key=args.model_name,
         X_train=X_train, 
         y_train=y_train, 
@@ -52,20 +56,21 @@ def main(args):
     print(f"\nSalvando Artefatos: {args.model_name.upper()}")
     results_path = f'../experiments_results/raw/raw_{args.dataset_name}_results.csv'
     save_results(
-        model_name=f'{args.model_name}_native',
+        model_name=f'{args.model_name}_multi_output',
         metrics=final_metrics,
         best_params=best_params,
         filepath=results_path
     )
     
-    # Salvar o objeto do modelo treinado
-    model_path = f'../models/{args.dataset_name}/{args.model_name}_native.joblib'
+    # Salva o objeto do modelo treinado
+    model_path = f'../models/{args.dataset_name}/{args.model_name}_multi_output.joblib'
     save_model(
         model=best_model,
         filepath=model_path
     )
     
-    print("\nExperimento Concluído com Sucesso!")
+    print(f"\nExperimento Concluído com Sucesso! O modelo {args.model_name} foi treinado!")
+    print(f"Conjunto usado para o treinamento: {args.dataset_name}")
 
 
 if __name__ == '__main__':
@@ -75,7 +80,7 @@ if __name__ == '__main__':
         '--model_name', 
         type=str, 
         required=True,
-        choices=['random_forest', 'knn', 'catboost', 'mlp'], 
+        choices=['ridge', 'random_forest', 'lightgbm', 'catboost', 'xgboost'], 
         help="O nome do modelo a ser treinado."
     )
     parser.add_argument(
