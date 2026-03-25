@@ -3,5 +3,5 @@
 __pycache__/
 all_models
 .vscode
-inference_ranking
+predicted_ranking
 synthetic
