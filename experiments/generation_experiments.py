@@ -1,8 +1,17 @@
-import pandas as pd
-import xgboost as xgb
 import os
+import sys
 import joblib
 import argparse
+
+# Pega o caminho absoluto da pasta onde este script está (/experiments)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Sobe um nível para chegar na raiz do projeto
+project_root = os.path.join(current_dir, "..")
+
+# Adiciona a raiz ao buscador do Python
+sys.path.append(os.path.abspath(project_root))
+
 from src.pipeline_generator import PipelineGenerator
 
 def run_discovery_pipeline(args):
@@ -25,7 +34,7 @@ def run_discovery_pipeline(args):
     
     # Gera as instâncias sintéticas
     df_synthetic = gen.generate_batch(args.dataset_name, args.n_instances)
-    path_synthetic = gen.save_for_inference(df_synthetic, args.dataset_name)
+    path_synthetic = gen.save_for_inference(df_synthetic, args.dataset_name, batch_id=args.batch_id)
     
     # Carrega o modelo
     print(f"\nCarregando modelo {args.model_name.upper()} para avaliar {args.dataset_name.upper()}...")
@@ -42,13 +51,14 @@ def run_discovery_pipeline(args):
     
     # Garante o diretório e salva o top 30 pipelines
     os.makedirs(OUTPUT_RANKING, exist_ok=True)
-    output_path = os.path.join(OUTPUT_RANKING, f"top_30_{args.dataset_name}_by_{args.model_name}.csv")
+    output_filename = f"top_30_{args.dataset_name}_{args.model_name}_batch_{args.batch_id}.csv"
+    output_path = os.path.join(OUTPUT_RANKING, output_filename)
     df_ranked.head(30).to_csv(output_path, index=False)
     
     # Printa os resultados
     print(f"Ranqueamento finalizado: {args.dataset_name.upper()}")
     print(f"Melhor F1 Previsto: {df_ranked['predicted_F1'].iloc[0]:.4f}")
-    print(f"Top 100 salvo em: {output_path}")
+    print(f"Top 30 salvo em: {output_path}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script para inferir desempenho de pipelines candidatos")
@@ -77,6 +87,14 @@ if __name__ == "__main__":
         type=int,
         required=True,
         help="Quantidade de instâncias a serem geradas"
+    )
+
+    # Id da batch para não sobrescrever nenhum arquivo
+    parser.add_argument(
+    '--batch_id', 
+    type=int, 
+    default=1, 
+    help="Identificador do lote para evitar sobrescrita de arquivos"
     )
 
     args = parser.parse_args()

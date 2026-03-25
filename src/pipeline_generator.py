@@ -29,6 +29,10 @@ class PipelineGenerator:
             'sk':   [c for c in self.columns if c.startswith('sklearn.') and '-' not in c]
         }
 
+        # Identifica quem é Flag e quem é Parâmetro 
+        self.flag_indices = [i for i, col in enumerate(self.columns) if '-' not in col]
+        self.param_indices = [i for i, col in enumerate(self.columns) if '-' in col]
+
     # Preenche os hiperparâmetros dos algoritmos sorteados usando os ranges globais
     def _sample_params(self, row_array, alg_name):
         # Filtra colunas que são parâmetros do algoritmo (ex: 'meka.alg-P-param')
@@ -47,63 +51,56 @@ class PipelineGenerator:
         print(f"Generating {n_instances} pipelines for {dataset_name.upper()}...")
         
         # Extrai regras específicas
-        ds_rules = self.rules['datasets'][dataset_name]
-        global_rules = self.rules['global_probs']
+        ds_rules = self.rules['pipeline_generation_config']['datasets'][dataset_name]
+        global_rules = self.rules['pipeline_generation_config']['global_probs']
         
-        # Matriz base preenchida com -1.0 
-        data = np.full((n_instances, len(self.columns)), -1.0)
+        # Cria a matriz base
+        data = np.empty((n_instances, len(self.columns)))
         
-        # Identifica grupos de colunas (flags)
-        meka_algs = self.groups['meka']
-        weka_algs = self.groups['weka']
-        mlfs_algs = self.groups['mlfs']
-        sk_algs   = self.groups['sk']
-
+        # Preenche Flags com 0 e Parâmetros com -1.0
+        data[:, self.flag_indices] = 0
+        data[:, self.param_indices] = -1.0
+        
         for i in range(n_instances):
-            # Feature Preprocessing (90% de chance)
+            # Feature Preprocessing (0 ou 1)
             if random.random() < global_rules['feature_preprocessing_prob']:
-                data[i, self.feature_to_idx['feature preprocessing']] = 1.0
+                data[i, self.feature_to_idx['feature preprocessing']] = 1
             
-            # MEKA (100% de chance)
-            chosen_meka = random.choice(meka_algs)
-            data[i, self.feature_to_idx[chosen_meka]] = 1.0
+            # MEKA (Ativa Flag com 1 e sorteia parametros)
+            chosen_meka = random.choice(self.groups['meka'])
+            data[i, self.feature_to_idx[chosen_meka]] = 1
             self._sample_params(data[i], chosen_meka)
 
-            # Selection Group (Sorteia entre MLFS e SKLEARN usando os pesos)
-            sel_group = np.random.choice(['mlfs', 'sklearn'], 
+            # Selection Group (MLFS ou SKLEARN)
+            sel_group = np.random.choice(['mlfs', 'sk'], 
                                          p=[ds_rules['selection_weights']['mlfs'], 
                                             ds_rules['selection_weights']['sklearn']])
-            
-            chosen_sel = random.choice(mlfs_algs if sel_group == 'mlfs' else sk_algs)
-            data[i, self.feature_to_idx[chosen_sel]] = 1.0
+            chosen_sel = random.choice(self.groups[sel_group])
+            data[i, self.feature_to_idx[chosen_sel]] = 1
             self._sample_params(data[i], chosen_sel)
 
-            # WEKA (Sorteia 1 ou 2 algoritmos conforme os pesos)
+            # WEKA (1 ou 2 algoritmos)
             n_weka = np.random.choice([1, 2], 
                                       p=[ds_rules['weka_weights']['1_alg'], 
                                          ds_rules['weka_weights']['2_algs']])
-            
-            chosen_wekas = random.sample(weka_algs, k=n_weka)
+            chosen_wekas = random.sample(self.groups['weka'], k=n_weka)
             for w_alg in chosen_wekas:
-                data[i, self.feature_to_idx[w_alg]] = 1.0
+                data[i, self.feature_to_idx[w_alg]] = 1
                 self._sample_params(data[i], w_alg)
 
         return pd.DataFrame(data, columns=self.columns)
 
     # Salva o DataFrame gerado em um CSV comprimido.
-    def save_for_inference(self, df, dataset_name, output_dir="../data/synthetic"):
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-
-        # Salva o arquivo com numeração sequencial 
-        version = 1
-        while True:
-            file_name = f"synthetic_{dataset_name}_v{version}.csv.gz"
-            full_path = os.path.join(output_dir, file_name)
-            if not os.path.exists(full_path):
-                break
-            version += 1
-
+    def save_for_inference(self, df, dataset_name, batch_id=1):
+        # Define a pasta base
+        base_path = "../data/synthetic"
+        os.makedirs(base_path, exist_ok=True)
+        
+        filename = f"synthetic_{dataset_name}_batch_{batch_id}.csv.gz"
+        full_path = os.path.join(base_path, filename)
+        
+        # Salva com compressão
         df.to_csv(full_path, index=False, compression='gzip')
-        print(f"Execução {version} salva em: {full_path}")
+        
+        print(f"   -> Massa bruta salva em: {full_path}")
         return full_path

@@ -2,7 +2,7 @@
   "pipeline_generation_config": {
     "global_probs": {
       "meka_prob": 1.0,
-      "feature_preprocessing_prob": 0.9,
+      "feature_preprocessing_prob": 1.0,
       "normalize_prob": 0.0
     },
     "datasets": {

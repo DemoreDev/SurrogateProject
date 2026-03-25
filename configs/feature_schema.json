@@ -1,4 +1,6 @@
 [
+    "normalize",
+    "feature preprocessing",
     "mlfs.igmf_adapted.PyIT_IGMF",
     "mlfs.igmf_adapted.PyIT_IGMF-n_features",
     "mlfs.ppt_mi_adapted.PyIT_PPT_MI",
