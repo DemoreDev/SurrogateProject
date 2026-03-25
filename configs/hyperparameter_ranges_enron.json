@@ -1,0 +1,672 @@
+{
+    "mlfs.igmf_adapted.PyIT_IGMF-n_features": {
+        "min": 2.0,
+        "max": 99.0,
+        "mean": 42.575250836120404
+    },
+    "mlfs.ppt_mi_adapted.PyIT_PPT_MI-n_features": {
+        "min": 0.0,
+        "max": 100.0,
+        "mean": 41.15124331129997
+    },
+    "sklearn.feature_selection.SelectFromModel-estimator": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4181344902386117
+    },
+    "sklearn.feature_selection.SelectFromModel-threshold": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+    },
+    "mlfs.br_skb.BR_SelectKBest-n_features": {
+        "min": 0.0,
+        "max": 100.0,
+        "mean": 42.680601092896175
+    },
+    "mlfs.br_skb.BR_SelectKBest-method": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 0.848087431693989
+    },
+    "mlfs.ppt_skb.PPT_SelectKBest-n_features": {
+        "min": 0.0,
+        "max": 100.0,
+        "mean": 44.36665501572877
+    },
+    "mlfs.ppt_skb.PPT_SelectKBest-method": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 0.7486892694861936
+    },
+    "mlfs.ppt_relieff.PPT_ReliefF-n_features": {
+        "min": 0.0,
+        "max": 100.0,
+        "mean": 42.52074468085107
+    },
+    "mlfs.ppt_relieff.PPT_ReliefF-neighbors": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+    },
+    "mlfs.ppt_sfm.PPT_SelectFromModel-n_features": {
+        "min": 0.0,
+        "max": 100.0,
+        "mean": 31.66121795787729
+    },
+    "mlfs.ppt_sfm.PPT_SelectFromModel-estimator": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4596633612436773
+    },
+    "mlfs.ppt_rfe.PPT_RecursiveFeatureElimination-n_features": {
+        "min": 0.0,
+        "max": 100.0,
+        "mean": 30.030839044267456
+    },
+    "mlfs.ppt_rfe.PPT_RecursiveFeatureElimination-estimator": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5465827005000926
+    },
+    "meka.classifiers.multilabel.MULAN.MLkNN-numOfNeighbors": {
+        "min": 0.0,
+        "max": 63.0,
+        "mean": 31.232730263157894
+    },
+    "meka.classifiers.multilabel.MULAN.HOMER-method": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 1.0129870129870129
+    },
+    "meka.classifiers.multilabel.MULAN.HOMER-clusters": {
+        "min": 0.0,
+        "max": 5.0,
+        "mean": 2.502164502164502
+    },
+    "meka.classifiers.multilabel.MULAN.HOMER-mll": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 1.0649350649350648
+    },
+    "meka.classifiers.multilabel.BPNN-E": {
+        "min": 0.0,
+        "max": 960.0,
+        "mean": 209.46712288009522
+    },
+    "meka.classifiers.multilabel.BPNN-H": {
+        "min": 0.0,
+        "max": 788.0,
+        "mean": 160.1666170782505
+    },
+    "meka.classifiers.multilabel.BPNN-r": {
+        "min": 0.0,
+        "max": 99.0,
+        "mean": 41.01249628086879
+    },
+    "meka.classifiers.multilabel.BPNN-m": {
+        "min": 0.0,
+        "max": 7.0,
+        "mean": 2.9562630169592383
+    },
+    "meka.classifiers.multilabel.RAkEL-N": {
+        "min": 0.0,
+        "max": 5.0,
+        "mean": 2.672548354258568
+    },
+    "meka.classifiers.multilabel.RAkEL-P": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 1.840515778758059
+    },
+    "meka.classifiers.multilabel.RAkEL-k": {
+        "min": 0.0,
+        "max": 20.0,
+        "mean": 10.331862911435358
+    },
+    "meka.classifiers.multilabel.RAkEL-M": {
+        "min": 0.0,
+        "max": 82.0,
+        "mean": 40.5585341024771
+    },
+    "meka.classifiers.multilabel.BCC-X": {
+        "min": 0.0,
+        "max": 9.0,
+        "mean": 4.4522483940042825
+    },
+    "meka.classifiers.multilabel.BRq-P": {
+        "min": 0.0,
+        "max": 14.0,
+        "mean": 7.359255046914984
+    },
+    "meka.classifiers.multilabel.MCC-Iy": {
+        "min": 0.0,
+        "max": 99.0,
+        "mean": 48.988330341113105
+    },
+    "meka.classifiers.multilabel.MCC-Is": {
+        "min": 0.0,
+        "max": 2457.0,
+        "mean": 192.48653500897666
+    },
+    "meka.classifiers.multilabel.MCC-P": {
+        "min": 0.0,
+        "max": 22.0,
+        "mean": 11.11938958707361
+    },
+    "meka.classifiers.multilabel.PS-P": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 2.703288600501401
+    },
+    "meka.classifiers.multilabel.PS-N": {
+        "min": 0.0,
+        "max": 5.0,
+        "mean": 2.226072850612004
+    },
+    "meka.classifiers.multilabel.PSt-P": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 2.797212792567447
+    },
+    "meka.classifiers.multilabel.PSt-N": {
+        "min": 0.0,
+        "max": 5.0,
+        "mean": 2.3707938776725626
+    },
+    "meka.classifiers.multilabel.RAkELd-P": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 2.725187656380317
+    },
+    "meka.classifiers.multilabel.RAkELd-N": {
+        "min": 0.0,
+        "max": 5.0,
+        "mean": 2.5172365860439254
+    },
+    "meka.classifiers.multilabel.RAkELd-batch-size": {
+        "min": 0.0,
+        "max": 82.0,
+        "mean": 41.11565193216569
+    },
+    "meka.classifiers.multilabel.CT-X": {
+        "min": 0.0,
+        "max": 9.0,
+        "mean": 4.74173712528824
+    },
+    "meka.classifiers.multilabel.CT-Iy": {
+        "min": 0.0,
+        "max": 99.0,
+        "mean": 50.20061491160646
+    },
+    "meka.classifiers.multilabel.CT-Is": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+    },
+    "meka.classifiers.multilabel.CT-P": {
+        "min": 0.0,
+        "max": 22.0,
+        "mean": 13.421983089930823
+    },
+    "meka.classifiers.multilabel.CT-H": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 0.6456571867794004
+    },
+    "meka.classifiers.multilabel.CT-L": {
+        "min": 0.0,
+        "max": 7.0,
+        "mean": 1.7475455820476857
+    },
+    "meka.classifiers.multilabel.CDN-Ic": {
+        "min": 0.0,
+        "max": 99.0,
+        "mean": 52.990697674418605
+    },
+    "meka.classifiers.multilabel.CDN-I": {
+        "min": 0.0,
+        "max": 898.0,
+        "mean": 467.81472868217054
+    },
+    "meka.classifiers.multilabel.CDT-H": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 1.3968253968253967
+    },
+    "meka.classifiers.multilabel.CDT-X": {
+        "min": 9.0,
+        "max": 9.0,
+        "mean": 9.0
+    },
+    "meka.classifiers.multilabel.CDT-I": {
+        "min": 1.0,
+        "max": 985.0,
+        "mean": 439.44444444444446
+    },
+    "meka.classifiers.multilabel.CDT-Ic": {
+        "min": 2.0,
+        "max": 99.0,
+        "mean": 47.42857142857143
+    },
+    "meka.classifiers.multilabel.CDT-L": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+    },
+    "meka.classifiers.multilabel.PMCC-Iy": {
+        "min": 0.0,
+        "max": 98.0,
+        "mean": 43.864
+    },
+    "meka.classifiers.multilabel.PMCC-Is": {
+        "min": 2.0,
+        "max": 1211.0,
+        "mean": 293.88
+    },
+    "meka.classifiers.multilabel.PMCC-B": {
+        "min": 3.0,
+        "max": 98.0,
+        "mean": 45.928
+    },
+    "meka.classifiers.multilabel.PMCC-O": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.464
+    },
+    "meka.classifiers.multilabel.PMCC-M": {
+        "min": 0.0,
+        "max": 49.0,
+        "mean": 24.952
+    },
+    "meka.classifiers.multilabel.PMCC-P": {
+        "min": 0.0,
+        "max": 22.0,
+        "mean": 10.6
+    },
+    "weka.classifiers.bayes.NaiveBayes-K": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.43783422459893045
+    },
+    "weka.classifiers.bayes.NaiveBayes-D": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4845422116527943
+    },
+    "weka.classifiers.rules.PART-M": {
+        "min": 0.0,
+        "max": 63.0,
+        "mean": 33.278952205882355
+    },
+    "weka.classifiers.rules.PART-B": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4931066176470588
+    },
+    "weka.classifiers.rules.PART-R": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5376838235294118
+    },
+    "weka.classifiers.rules.PART-N": {
+        "min": 0.0,
+        "max": 3.0,
+        "mean": 1.5615384615384615
+    },
+    "weka.classifiers.trees.J48-M": {
+        "min": 0.0,
+        "max": 63.0,
+        "mean": 36.07268623024831
+    },
+    "weka.classifiers.trees.J48-B": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.46651617757712566
+    },
+    "weka.classifiers.trees.J48-J": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5184349134687735
+    },
+    "weka.classifiers.trees.J48-A": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4489089541008277
+    },
+    "weka.classifiers.trees.J48-U": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.3766741911211437
+    },
+    "weka.classifiers.trees.J48-C": {
+        "min": 0.0,
+        "max": 18.0,
+        "mean": 8.45098985997103
+    },
+    "weka.classifiers.trees.J48-O": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5449058425881217
+    },
+    "weka.classifiers.trees.J48-S": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.47078705939159826
+    },
+    "weka.classifiers.lazy.IBk-K": {
+        "min": 0.0,
+        "max": 63.0,
+        "mean": 33.49502982107356
+    },
+    "weka.classifiers.lazy.IBk-X": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.47763419483101394
+    },
+    "weka.classifiers.lazy.IBk-I": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.49254473161033796
+    },
+    "weka.classifiers.lazy.IBk-F": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5602350636630754
+    },
+    "weka.classifiers.functions.SMO-C": {
+        "min": 0.0,
+        "max": 10.0,
+        "mean": 5.049894957983193
+    },
+    "weka.classifiers.functions.SMO-N": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 1.023109243697479
+    },
+    "weka.classifiers.functions.SMO-M": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4942226890756303
+    },
+    "weka.classifiers.functions.SMO-K": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+    },
+    "weka.classifiers.rules.JRip-N": {
+        "min": 0.0,
+        "max": 40.0,
+        "mean": 20.28829095209935
+    },
+    "weka.classifiers.rules.JRip-E": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5609107037256061
+    },
+    "weka.classifiers.rules.JRip-P": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5001478415138971
+    },
+    "weka.classifiers.rules.JRip-O": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 2.067415730337079
+    },
+    "weka.classifiers.functions.Logistic-R": {
+        "min": 0.0,
+        "max": 13.0,
+        "mean": 7.714285714285714
+    },
+    "weka.classifiers.bayes.BayesNet-D": {
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+    },
+    "weka.classifiers.bayes.BayesNet-Q": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 1.800693240901213
+    },
+    "weka.classifiers.trees.RandomForest-I": {
+        "min": 0.0,
+        "max": 254.0,
+        "mean": 117.17693201626962
+    },
+    "weka.classifiers.trees.RandomForest-K": {
+        "min": 0.0,
+        "max": 61.0,
+        "mean": 29.62202208018594
+    },
+    "weka.classifiers.trees.RandomForest-depth": {
+        "min": 0.0,
+        "max": 37.0,
+        "mean": 15.339628123184195
+    },
+    "weka.classifiers.rules.DecisionTable-E": {
+        "min": 0.0,
+        "max": 3.0,
+        "mean": 1.358974358974359
+    },
+    "weka.classifiers.rules.DecisionTable-I": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4281742354031511
+    },
+    "weka.classifiers.rules.DecisionTable-S": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5477293790546802
+    },
+    "weka.classifiers.rules.DecisionTable-X": {
+        "min": 0.0,
+        "max": 3.0,
+        "mean": 1.4504170528266913
+    },
+    "weka.classifiers.lazy.KStar-B": {
+        "min": 0.0,
+        "max": 99.0,
+        "mean": 49.386861313868614
+    },
+    "weka.classifiers.lazy.KStar-E": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.3982664233576642
+    },
+    "weka.classifiers.lazy.KStar-M": {
+        "min": 0.0,
+        "max": 3.0,
+        "mean": 1.4457116788321167
+    },
+    "weka.classifiers.trees.LMT-M": {
+        "min": 0.0,
+        "max": 63.0,
+        "mean": 35.20411622276029
+    },
+    "weka.classifiers.trees.LMT-B": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.41840193704600487
+    },
+    "weka.classifiers.trees.LMT-R": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.36295399515738497
+    },
+    "weka.classifiers.trees.LMT-C": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5932203389830508
+    },
+    "weka.classifiers.trees.LMT-P": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5825665859564164
+    },
+    "weka.classifiers.trees.LMT-W": {
+        "min": 0.0,
+        "max": 100.0,
+        "mean": 36.021549636803876
+    },
+    "weka.classifiers.trees.LMT-A": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.6527845036319613
+    },
+    "weka.classifiers.functions.MultilayerPerceptron-L": {
+        "min": 0.0,
+        "max": 9.0,
+        "mean": 4.358974358974359
+    },
+    "weka.classifiers.functions.MultilayerPerceptron-M": {
+        "min": 0.0,
+        "max": 10.0,
+        "mean": 4.523076923076923
+    },
+    "weka.classifiers.functions.MultilayerPerceptron-H": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 1.9153846153846155
+    },
+    "weka.classifiers.functions.MultilayerPerceptron-B": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5487179487179488
+    },
+    "weka.classifiers.functions.MultilayerPerceptron-R": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5974358974358974
+    },
+    "weka.classifiers.functions.MultilayerPerceptron-D": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5820512820512821
+    },
+    "weka.classifiers.trees.REPTree-M": {
+        "min": 0.0,
+        "max": 63.0,
+        "mean": 35.29359251259899
+    },
+    "weka.classifiers.trees.REPTree-L": {
+        "min": 0.0,
+        "max": 37.0,
+        "mean": 15.53304535637149
+    },
+    "weka.classifiers.trees.REPTree-P": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.49503239740820737
+    },
+    "weka.classifiers.functions.SGD-F": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.613359023763648
+    },
+    "weka.classifiers.functions.SGD-L": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 2.453222008135303
+    },
+    "weka.classifiers.functions.SGD-R": {
+        "min": 0.0,
+        "max": 13.0,
+        "mean": 6.767929779490473
+    },
+    "weka.classifiers.functions.SGD-N": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.6409762363519589
+    },
+    "weka.classifiers.functions.SGD-M": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.636480411046885
+    },
+    "weka.classifiers.trees.RandomTree-M": {
+        "min": 0.0,
+        "max": 63.0,
+        "mean": 37.028416688954266
+    },
+    "weka.classifiers.trees.RandomTree-K": {
+        "min": 0.0,
+        "max": 61.0,
+        "mean": 36.141147365605775
+    },
+    "weka.classifiers.trees.RandomTree-depth": {
+        "min": 0.0,
+        "max": 37.0,
+        "mean": 18.282495319604173
+    },
+    "weka.classifiers.trees.RandomTree-N": {
+        "min": 0.0,
+        "max": 7.0,
+        "mean": 2.71844075956138
+    },
+    "weka.classifiers.functions.SimpleLogistic-W": {
+        "min": 0.0,
+        "max": 10.0,
+        "mean": 4.147089397089397
+    },
+    "weka.classifiers.functions.SimpleLogistic-S": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5725051975051975
+    },
+    "weka.classifiers.functions.SimpleLogistic-A": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5356029106029107
+    },
+    "weka.classifiers.functions.VotedPerceptron-I": {
+        "min": 0.0,
+        "max": 8.0,
+        "mean": 3.867669172932331
+    },
+    "weka.classifiers.functions.VotedPerceptron-M": {
+        "min": 141.0,
+        "max": 44929.0,
+        "mean": 21721.215037593985
+    },
+    "weka.classifiers.functions.VotedPerceptron-E": {
+        "min": 0.0,
+        "max": 47.0,
+        "mean": 24.042105263157893
+    },
+    "weka.classifiers.functions.supportVector.PolyKernel-E": {
+        "min": 0.0,
+        "max": 48.0,
+        "mean": 20.463636363636365
+    },
+    "weka.classifiers.functions.supportVector.PolyKernel-L": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5018181818181818
+    },
+    "weka.classifiers.functions.supportVector.NormalizedPolyKernel-E": {
+        "min": 0.0,
+        "max": 48.0,
+        "mean": 22.337811900191937
+    },
+    "weka.classifiers.functions.supportVector.NormalizedPolyKernel-L": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.5604606525911708
+    },
+    "weka.classifiers.functions.supportVector.Puk-O": {
+        "min": 0.0,
+        "max": 9.0,
+        "mean": 4.299401197604791
+    },
+    "weka.classifiers.functions.supportVector.Puk-S": {
+        "min": 0.0,
+        "max": 99.0,
+        "mean": 51.467065868263475
+    },
+    "weka.classifiers.functions.supportVector.RBFKernel-G": {
+        "min": 0.0,
+        "max": 4.0,
+        "mean": 1.6472945891783568
+    }
+}
