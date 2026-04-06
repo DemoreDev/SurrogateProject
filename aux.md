@@ -34,9 +34,14 @@ python3 candidate_generation_experiment.py --model_name xgboost --dataset_name m
 done
 ```
 
+```
+python3 candidate_validation_experiment.py --csv birds --top 10
+```
 
 ----------------------------------------------------------------------------------
 ## A seguir:
+
+CONSERTAR O SCRIPT DE VALIDAÇÃO DE CANDIDATOS
 
 - A Generalização 
 Objetivo: Criar um modelo capaz de operar em datasets 
