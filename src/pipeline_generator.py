@@ -95,33 +95,30 @@ class PipelineGenerator:
         # Retorna o dataframe pronto para inferência 
         return pd.DataFrame(data, columns=self.columns)
 
+    import random
+
     def _initialize_hyperparameters(self, row_array, alg_name):
         """
-        Função responsável por preencher os hiperparâmetros, respeitando 
-        as restrições de integridade e evitando intervalos vazios
+        Preenche os hiperparâmetros baseando-se 
+        nos tipos definidos no arquivo JSON
         """
         prefix = f"{alg_name}-"
         params_to_fill = [c for c in self.columns if c.startswith(prefix)]
         
         for param in params_to_fill:
             if param in self.ranges:
-                p_min = self.ranges[param]['min']
-                p_max = self.ranges[param]['max']
+                config = self.ranges[param]
+                p_min, p_max, p_type = config['min'], config['max'], config['type']
                 
-                # Regra para número de Features (Mínimo de 10)
-                if 'n_features' in param:
-                    low = max(10, int(p_min))
-                    high = max(low, int(p_max)) 
+                if p_type == 'bool':
+                    val = random.choice([0.0, 1.0])
+                
+                elif p_type == 'int':
+                    low = max(10, int(p_min)) if 'n_features' in param else int(p_min)
+                    high = max(low, int(p_max))
                     val = random.randint(low, high)
                 
-                # Regra para parâmetros inteiros (Vizinhos, Árvores, Profundidade, etc)
-                elif any(x in param for x in ['Neighbors', '-I', '-K', '-depth', '-B']):
-                    low = max(1, int(p_min))
-                    high = max(low, int(p_max)) 
-                    val = random.randint(low, high)
-                
-                # Regra para parâmetros contínuos
-                else:
+                else: # float
                     val = random.uniform(p_min, p_max)
                 
                 row_array[self.feature_to_idx[param]] = float(val)
