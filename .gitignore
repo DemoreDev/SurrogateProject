@@ -5,3 +5,4 @@ all_models
 .vscode
 predicted_ranking
 synthetic
+*.egg-info/

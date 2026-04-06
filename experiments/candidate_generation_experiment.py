@@ -1,8 +1,7 @@
-import os
 import joblib
 import argparse
 from src.pipeline_generator import PipelineGenerator
-import os
+import pandas as pd
 from pathlib import Path
 
 # Define a raiz do projeto
@@ -30,7 +29,10 @@ def rank_candidates(args):
     MODEL_PATH = BASE_DIR / "candidate_models" / args.dataset_name / model_filename
 
     # Caminho para salvar o resultado
-    OUTPUT_RANKING = BASE_DIR / "experiments_results" / "inference_ranking"
+    OUTPUT_RANKING = BASE_DIR / "experiments_results" / "predicted_ranking"
+
+    # Caminho para os resultados globais (todas as batchs)
+    BEST_PIPELINES_PATH = OUTPUT_RANKING / f"best_{args.dataset_name}_{args.model_name}.csv"
 
     # Garante que a pasta de saída existe 
     OUTPUT_RANKING.mkdir(parents=True, exist_ok=True)
@@ -55,15 +57,22 @@ def rank_candidates(args):
     df_synthetic['predicted_model_size_log'] = predictions[:, 1]
     df_ranked = df_synthetic.sort_values(by='predicted_F1', ascending=False)
     
-    # Salva o top 30 pipelines
-    output_filename = f"top_30_{args.dataset_name}_{args.model_name}_batch_{args.batch_id}.csv"
-    output_path = os.path.join(OUTPUT_RANKING, output_filename)
-    df_ranked.head(30).to_csv(output_path, index=False)
+    # Filtra os 5 melhores 
+    current_top = df_ranked.head(5)
     
-    # Printa os resultados
-    print(f"Ranqueamento finalizado: {args.dataset_name.upper()}")
-    print(f"Melhor F1 Previsto: {df_ranked['predicted_F1'].iloc[0]:.4f}")
-    print(f"Top 30 salvo em: {output_path}")
+    if BEST_PIPELINES_PATH.exists():
+        df_master = pd.read_csv(BEST_PIPELINES_PATH)
+        df_combined = pd.concat([df_master, current_top], ignore_index=True)
+    else:
+        df_combined = current_top
+
+    # Ordena e limita a 100 candidatos
+    df_global_elite = df_combined.sort_values(by='predicted_F1', ascending=False).head(100)
+
+    # Salva o resultado final 
+    df_global_elite.to_csv(BEST_PIPELINES_PATH, index=False)
+
+    print(f"🔝 Melhor F1 atual: {df_global_elite['predicted_F1'].iloc[0]:.4f}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script para inferir desempenho de pipelines candidatos")

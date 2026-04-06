@@ -94,25 +94,37 @@ class PipelineGenerator:
 
         # Retorna o dataframe pronto para inferência 
         return pd.DataFrame(data, columns=self.columns)
-    
+
     def _initialize_hyperparameters(self, row_array, alg_name):
         """
-        Função responsável por preencher os hiperparâmetros 
-        dos algoritmos sorteados por 'generate_candidates' usando 
-        os ranges globais definidos nos arquivos JSON
+        Função responsável por preencher os hiperparâmetros, respeitando 
+        as restrições de integridade e evitando intervalos vazios
         """
-
-        # Filtra quais colunas são os hiperparâmetros do algoritmo escolhido 
         prefix = f"{alg_name}-"
         params_to_fill = [c for c in self.columns if c.startswith(prefix)]
         
-        # Itera por cada um dos hiperparâmetros e preenche 
-        # com um valor aleatório dentro do range definido
         for param in params_to_fill:
             if param in self.ranges:
                 p_min = self.ranges[param]['min']
                 p_max = self.ranges[param]['max']
-                row_array[self.feature_to_idx[param]] = random.uniform(p_min, p_max)
+                
+                # Regra para número de Features (Mínimo de 10)
+                if 'n_features' in param:
+                    low = max(10, int(p_min))
+                    high = max(low, int(p_max)) 
+                    val = random.randint(low, high)
+                
+                # Regra para parâmetros inteiros (Vizinhos, Árvores, Profundidade, etc)
+                elif any(x in param for x in ['Neighbors', '-I', '-K', '-depth', '-B']):
+                    low = max(1, int(p_min))
+                    high = max(low, int(p_max)) 
+                    val = random.randint(low, high)
+                
+                # Regra para parâmetros contínuos
+                else:
+                    val = random.uniform(p_min, p_max)
+                
+                row_array[self.feature_to_idx[param]] = float(val)
 
     
     def save_for_inference(self, df, dataset_name, batch_id=1):

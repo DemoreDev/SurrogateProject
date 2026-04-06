@@ -20,33 +20,23 @@
 
 ## Como rodar os experimentos no terminal:
 
-`python multi_output_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset`
+```
+python multi_output_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset
 
-`python regressor_chain_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset`
+python regressor_chain_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset
 
-`python native_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset`
+python native_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset
+```
+
+```
+for i in {1..20}; do
+python3 candidate_generation_experiment.py --model_name xgboost --dataset_name medical --n_instances 50000 --batch_id $i
+done
+```
 
 
 ----------------------------------------------------------------------------------
 ## A seguir:
-Concluir o notebook random_pipeline_gen (tirar conclusões)
-
-- Validação "In-Loco" 
-Objetivo: Provar que o modelo treinado no Birds 
-realmente sabe ranquear os pipelines do Birds
-
-
-    Separar o dataset de teste original (dados reais)
-    Filtrar apenas os 10% melhores pipelines (F1 mais alto)
-    XGBoost ordenar esses pipelines
-    Calcular a Correlação de Spearman entre a ordem real e a ordem prevista
-    
-Prova de Conceito (PoC):
-    Usar o script de geração aleatória 
-    Selecionar o Top 3 Pipelines sugeridos pelo modelo
-    Implementar esse pipeline manualmente e rodar no dataset original Birds
-    Comparar o F1 Real vs. F1 Previsto. 
-
 
 - A Generalização 
 Objetivo: Criar um modelo capaz de operar em datasets 
