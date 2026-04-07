@@ -38,7 +38,7 @@ done
 
 ### **Para validar pipelines preditos**
 ```
-python3 validation_experiment.py --dataset_name medical --top_n 1
+
 ```
 
 ----------------------------------------------------------------------------------
