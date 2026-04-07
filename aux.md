@@ -31,9 +31,14 @@ python native_experiments.py --model_name nome_do_modelo --dataset_name nome_do_
 
 ### **Para gerar pipelines candidatos**
 ```
-for i in {1..20}; do
+for i in {1..5}; do
 python3 candidate_generation_experiment.py --model_name xgboost --dataset_name medical --n_instances 50000 --batch_id $i
 done
+```
+
+### **Para validar pipelines preditos**
+```
+python3 validation_experiment.py --dataset_name medical --top_n 1
 ```
 
 ----------------------------------------------------------------------------------
