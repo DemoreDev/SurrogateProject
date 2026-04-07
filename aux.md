@@ -20,6 +20,7 @@
 
 ## Como rodar os experimentos no terminal:
 
+### **Para treinar um modelo de uma abordagem específica**
 ```
 python multi_output_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset
 
@@ -28,20 +29,17 @@ python regressor_chain_experiments.py --model_name nome_do_modelo --dataset_name
 python native_experiments.py --model_name nome_do_modelo --dataset_name nome_do_dataset
 ```
 
+### **Para gerar pipelines candidatos**
 ```
 for i in {1..20}; do
 python3 candidate_generation_experiment.py --model_name xgboost --dataset_name medical --n_instances 50000 --batch_id $i
 done
 ```
 
-```
-python3 candidate_validation_experiment.py --csv birds --top 10
-```
-
 ----------------------------------------------------------------------------------
 ## A seguir:
 
-CONSERTAR O SCRIPT DE VALIDAÇÃO DE CANDIDATOS
+Começar o script de validação de candidatos
 
 - A Generalização 
 Objetivo: Criar um modelo capaz de operar em datasets 
@@ -63,24 +61,6 @@ Criação do Dataset-mestre:
         Testar a performance no que ficou de fora
         Repetir trocando o dataset de teste (generalização)
 
-- O Motor de Otimização ϵ-Greedy
-
-Objetivo: Implementar o algoritmo que usa o surrogado para 
-encontrar a melhor solução, substituindo a busca cega
-
-Implementação da Busca:
-    Criar função que gera vários pipelines candidatos aleatórios (ordem de 10000)
-    Passar os candidatos pelo modelo generalista (já alimentado com as meta-features do dataset alvo)
-
-Lógica ϵ-Greedy (Epsilon-Greedy):
-    Definir um ϵ (ex: 0.10)
-        Gerar um número aleatório:
-        Se < 0.90: Escolher o candidato com o maior F1 previsto 
-        Se < 0.10: Escolher um candidato totalmente aleatório 
-
-Benchmark de Eficiência:
-    Comparar ϵ-Greedy vs. Random Search 
-
 
 Análise Comparativa e Explicabilidade
 Objetivo: Adicionar profundidade e entender
@@ -93,17 +73,5 @@ Explicabilidade com SHAP:
     Exemplo: O gráfico de dependência mostra que quando nr_instances é baixo, 
     o modelo penaliza rf_n_estimators alto (evitando overfitting)? 
 
-Empacotamento Final
-
-Tabelas Finais:
-    Ranking dos Modelos (já tenho)
-    Tabela de Generalização (Performance Leave-One-Out)
-    Comparativo de Tempo: ϵ-Greedy vs Random Search 
-
-Pontos: 
-    - análise de modelos (Fase 1)
-    - modelo escalável (Fase 2)
-    - método de busca eficiente (Fase 3) 
-    - explicação (Fase 4)
 
 

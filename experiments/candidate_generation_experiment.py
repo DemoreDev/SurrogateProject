@@ -29,7 +29,7 @@ def rank_candidates(args):
     MODEL_PATH = BASE_DIR / "candidate_models" / args.dataset_name / model_filename
 
     # Caminho para salvar o resultado
-    OUTPUT_RANKING = BASE_DIR / "experiments_results" / "predicted_ranking"
+    OUTPUT_RANKING = BASE_DIR / "results" / "predicted_pipeline_ranking"
 
     # Caminho para os resultados globais (todas as batchs)
     BEST_PIPELINES_PATH = OUTPUT_RANKING / f"best_{args.dataset_name}_{args.model_name}.csv"
