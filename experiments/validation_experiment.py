@@ -1,14 +1,23 @@
+from pathlib import Path
+import sys
+
+BASE_DIR  = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
 import pandas as pd
 import argparse
 import csv
 import os
 import uuid
 from src.process_arff import save_arff, read_arff
-from pathlib import Path
 import src.path_config as cfg
 from src.java_executor import MekaExecutor
 from src.output_parser import parse_output
 from src.csv_translator import PipelineTranslator
+import warnings
+
+# Silencia os RuntimeWarnings do Scikit-Learn 
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 import mlfs.br_skb
 import mlfs.br_relieff
@@ -111,30 +120,32 @@ def main(args):
             java_test_path = orig_test_path
             
             # Feature Preprocessing
-            if fp_cmd and str(fp_cmd).strip() != "":
-                print("Aplicando Feature Preprocessing...")
-                
-                # Lê os arffs 
-                feat_types, dfX_train, dfy_train = read_arff(str(orig_train_path), NUM_LABELS)
-                _, dfX_test, dfy_test = read_arff(str(orig_test_path), NUM_LABELS)
-                
-                # Instancia o algoritmo com eval()
-                fp_algorithm = eval(fp_cmd)
-
-                # Executa Fit e Transform
-                fp_algorithm.fit(dfX_train, dfy_train)
-                dfX_train_new = fp_algorithm.transform(dfX_train)
-                dfX_test_new = fp_algorithm.transform(dfX_test)
-
-                # Define caminhos temporários
-                java_train_path = TEMP_DIR / f"temp_train_{uuid.uuid4().hex}.arff"
-                java_test_path = TEMP_DIR / f"temp_test_{uuid.uuid4().hex}.arff"
-
-                # Salva os novos arquivos temporários no disco
-                save_arff(dfX_train_new, dfy_train, feat_types, NUM_LABELS, args.dataset_name, str(java_train_path))
-                save_arff(dfX_test_new, dfy_test, feat_types, NUM_LABELS, args.dataset_name, str(java_test_path))
-
             try:
+                if fp_cmd and str(fp_cmd).strip() != "":
+                    print("Aplicando Feature Preprocessing...")
+                    print(f"Comando de FP: {fp_cmd}")
+                    
+                    # Lê os arffs 
+                    feat_types, dfX_train, dfy_train = read_arff(str(orig_train_path), NUM_LABELS)
+                    _, dfX_test, dfy_test = read_arff(str(orig_test_path), NUM_LABELS)
+                    
+                    # Instancia o algoritmo com eval()
+                    fp_algorithm = eval(fp_cmd)
+
+                    # Executa Fit e Transform
+                    fp_algorithm.fit(dfX_train, dfy_train)
+                    dfX_train_new = fp_algorithm.transform(dfX_train)
+                    dfX_test_new = fp_algorithm.transform(dfX_test)
+
+                    # Define caminhos temporários
+                    java_train_path = TEMP_DIR / f"temp_train_{uuid.uuid4().hex}.arff"
+                    java_test_path = TEMP_DIR / f"temp_test_{uuid.uuid4().hex}.arff"
+
+                    # Salva os novos arquivos temporários no disco
+                    save_arff(dfX_train_new, dfy_train, feat_types, NUM_LABELS, args.dataset_name, str(java_train_path))
+                    save_arff(dfX_test_new, dfy_test, feat_types, NUM_LABELS, args.dataset_name, str(java_test_path))
+
+                
                 # Constrói o Comando 
                 cmd, temp_model_path = executor.build_command(
                     translated_pipeline=pipeline_info,
@@ -164,10 +175,18 @@ def main(args):
                     msg = res.get("error", "Erro Desconhecido").splitlines()[0] if res.get("error") else "Sem output de erro."
                     print(f"    [!] ERRO NO JAVA: {msg}")
 
+            except Exception as e:
+                print(f"    [!] ERRO CRÍTICO NO PYTHON (Fold {fold}): {str(e)}")
+                print("    [!] O algoritmo falhou matematicamente. Abortando este pipeline...")
+                # O 'break' interrompe os outros folds e joga o código para o cálculo final, 
+                # que vai registrar esse pipeline como "FALHA" no CSV automaticamente!
+                break
+
             finally:
-                if fp_cmd and str(fp_cmd).strip() != "":
-                    if os.path.exists(java_train_path): os.remove(java_train_path)
-                    if os.path.exists(java_test_path): os.remove(java_test_path)
+                if java_train_path != orig_train_path and os.path.exists(java_train_path):
+                    os.remove(java_train_path)
+                if java_test_path != orig_test_path and os.path.exists(java_test_path):
+                    os.remove(java_test_path)
         
         # Salva a mediana dos folds para comparação
         csv_line = {
@@ -235,9 +254,8 @@ if __name__ == "__main__":
     }
 
     # Configurações de Caminho
-    BASE_DIR  = Path(__file__).resolve().parent.parent
     CSV_PATH = BASE_DIR / "results" / "predicted_pipeline_ranking" / f"best_{args.dataset_name.lower()}_xgboost.csv"
-    OUTPUT_CSV = BASE_DIR / "results" / "validated_pipelines" / f"validated_{args.dataset_name.lower()}_pipelines.csv"
+    OUTPUT_CSV = BASE_DIR / "results" / "validation" / f"validated_{args.dataset_name.lower()}_pipelines.csv"
     ARFF_PATH = BASE_DIR / "data" / "raw" / f"{args.dataset_name.lower()}"
     TEMP_DIR = BASE_DIR / "temp"
     TEMP_DIR.mkdir(parents=True, exist_ok=True)

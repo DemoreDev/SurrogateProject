@@ -4,7 +4,7 @@ import uuid
 import os
 import json
 from pathlib import Path
-import path_config as cfg
+import src.path_config as cfg
 
 # Define a raiz do projeto 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,7 +77,7 @@ class MekaExecutor:
         kernel_string = translated_pipeline.get("kernel")
         if kernel_string:
             cmd.extend(["--", "-K"])
-            cmd.extend(kernel_string.split())
+            cmd.append(kernel_string)
 
         # PRINT DE DEBUG
         print(f"\n[DEBUG EXECUTOR] Comando montado:\n{' '.join(cmd)}\n")

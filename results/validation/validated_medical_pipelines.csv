@@ -1,0 +1,17 @@
+mlc,slc,kernel,execution_time,real_f1,real_size,predicted_F1,predicted_model_size,status,error
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4 -L,7.28,0.106,4248634,0.8932547569274902,15.198946952819824,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4 -L,4.17,0.023,2038907,0.885999858379364,14.875791549682615,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4 -L,5.47,0.049,2812618,0.8847273588180542,15.025166511535645,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4 -L,0,,,0.8846241235733032,15.172828674316406,FALHA,Todos os 3 folds falharam ou não retornaram F1.
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4 -L,4.0,0.027,1908229,0.8842985033988953,14.849973678588867,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4 -L,8.02,0.109,5058990,0.8838716745376587,15.276297569274902,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4 -L,8.76,0.116,5496096,0.88283306,15.312211,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4 -L,8.3,0.115,5261036,0.8813135,15.280335,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4 -L,0,,,0.8803488612174988,15.012493133544922,FALHA,Todos os 3 folds falharam ou não retornaram F1.
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4 -L,8.24,0.115,5226042,0.8795685768127441,15.308524131774902,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4 -L,0,,,0.87658805,15.215978,FALHA,Todos os 3 folds falharam ou não retornaram F1.
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4 -L,7.39,0.09,3828402,0.8764532208442688,15.11084270477295,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4,8.82,0.116,5530136,0.874718189239502,15.32568073272705,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.PolyKernel -E 4 -L,0,,,0.87258804,15.277832,FALHA,Todos os 3 folds falharam ou não retornaram F1.
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.functions.SMO,weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4,6.13,0.075,3181999,0.8720318078994751,15.04209041595459,SUCESSO,
+meka.classifiers.multilabel.MULAN -S ECC,weka.classifiers.trees.J48 -M 2 -A -U -C 0.2995822046659711,,0.6,,,0.8710463643074036,13.641533851623535,FALHA,Todos os 3 folds falharam ou não retornaram F1.

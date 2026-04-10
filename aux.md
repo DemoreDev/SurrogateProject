@@ -38,13 +38,13 @@ done
 
 ### **Para validar pipelines preditos**
 ```
-
+python3 validation_experiment.py --dataset_name medical --top_n 25
 ```
 
 ----------------------------------------------------------------------------------
 ## A seguir:
 
-Começar o script de validação de candidatos
+Verificar o desempenho usando os scripts feitos
 
 - A Generalização 
 Objetivo: Criar um modelo capaz de operar em datasets 
