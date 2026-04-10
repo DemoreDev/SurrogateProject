@@ -1,65 +1,41 @@
 import subprocess
+import re
 
-def testar_experimento():
+def extrair_f1(output):
+    """Procura a linha do F1 Macro por label e extrai o valor numérico."""
+    for linha in output.split('\n'):
+        if "F1 (macro averaged by label)" in linha:
+            # Captura o número no final da linha (funciona com ponto ou vírgula)
+            match = re.search(r"(\d+[.,]\d+)", linha)
+            if match:
+                return float(match.group(1).replace(',', '.'))
+    return None
 
-    comando = [
-        "java",
-        "-Xmx8G",
-        "-cp", "/home/leodemore/projetoFapesp/ProjetosIC/lib/*",
-        "meka.classifiers.multilabel.MULAN",
-        
-        # --- MUDANÇA AQUI: Inserindo Treino e Teste explicitamente ---
-        "-t", "/home/leodemore/projetoFapesp/ProjetosIC/data/raw/medical/medical-train-0.arff", 
-        "-T", "/home/leodemore/projetoFapesp/ProjetosIC/data/raw/medical/medical-test-0.arff",  
-        # -------------------------------------------------------------
-        
-        "-C", "45",
-        "-d", "/home/leodemore/projetoFapesp/ProjetosIC/temp/temp_model.model",
-        "-S", "ECC",
-        
-        "-verbosity", "3",
+f1_scores = []
+data = "enron"
 
-        "-W", "weka.classifiers.functions.SMO",
-        "--",
-        "-K", "weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 4 -L"
-    ]
-
+for i in range(3):
+    print(f"\n--- INICIANDO FOLD {i} ---")
+    
     comando2 = [
         "java",
         "-Xmx8G",
-        "-cp", "/home/leodemore/projetoFapesp/ProjetosIC/lib/*",
-        
-        # --- 1. MLC (O Algoritmo do Meka) ---
+        "-cp", "/home/leodemore/IC/SurrogateProject/lib/*",
         "meka.classifiers.multilabel.BRq",
-        
-        # --- 2. Treino, Teste e Sistema ---
-        "-t", "/home/leodemore/projetoFapesp/ProjetosIC/data/raw/medical/medical-train-0.arff", 
-        "-T", "/home/leodemore/projetoFapesp/ProjetosIC/data/raw/medical/medical-test-0.arff",  
+        "-t", f"/home/leodemore/IC/SurrogateProject/data/raw/{data}/{data}-train-{i}.arff", 
+        "-T", f"/home/leodemore/IC/SurrogateProject/data/raw/{data}/{data}-test-{i}.arff",  
         "-C", "45",
-        "-d", "/home/leodemore/projetoFapesp/ProjetosIC/temp/temp_model_campeao.model",
-        
-        # --- 3. Parâmetros do MLC (BRq: P = 10.0) ---
+        "-d", f"/home/leodemore/IC/SurrogateProject/temp/temp_model_fold_{i}.model",
         "-P", "10",
-        
-        # Verbosity fica aqui, antes de chamar o WEKA
         "-verbosity", "3",
-
-        # --- 4. SLC (O Algoritmo Base do Weka) ---
         "-W", "weka.classifiers.trees.LMT",
-        
-        # (Opcional, mas muito recomendado pelo Weka para separar parâmetros do classificador base)
         "--", 
-        
-        # --- 5. Parâmetros do SLC (LMT: M=40, W=2, P=Ativo, A=Ativo) ---
         "-M", "40",
         "-W", "2",
         "-P",
         "-A"
     ]
 
-    print("Iniciando o experimento com Treino e Teste separados...")
-    print("-" * 60)
-    
     try:
         processo = subprocess.run(
             comando2,
@@ -68,22 +44,28 @@ def testar_experimento():
             check=True 
         )
 
-        with open("saida.txt", "w") as f:
-            f.write(processo.stdout)
+        f1_fold = extrair_f1(processo.stdout)
         
-        print("✅ EXPERIMENTO CONCLUÍDO COM SUCESSO!\n")
-        print("--- RESULTADOS (Métricas geradas no arquivo de Teste) ---")
-        
-        # Ajustei para imprimir um pouco mais da saída, já que a tabela 
-        # de métricas costuma ficar no meio/fim do log
-        print(processo.stdout) 
+        if f1_fold is not None:
+            f1_scores.append(f1_fold)
+            print(f"✅ Fold {i} concluído. F1: {f1_fold}")
+        else:
+            print(f"⚠️ Fold {i} concluído, mas o F1 não foi encontrado na saída.")
 
+        # Salva a saída do último fold para conferência se desejar
+        with open(f"saida_fold_{i}.txt", "w") as f:
+            f.write(processo.stdout)
 
     except subprocess.CalledProcessError as e:
-        print("❌ ERRO NA EXECUÇÃO DO JAVA!\n")
-        print(f"Código de erro: {e.returncode}")
-        print("--- MENSAGEM DE ERRO (STDERR) ---")
+        print(f"❌ ERRO NO FOLD {i}!")
         print(e.stderr)
 
-if __name__ == "__main__":
-    testar_experimento()
+# --- CÁLCULO DA MÉDIA FINAL ---
+print("\n" + "="*30)
+if len(f1_scores) > 0:
+    media_f1 = sum(f1_scores) / len(f1_scores)
+    print(f"RESULTADO FINAL (Média de {len(f1_scores)} folds)")
+    print(f"F1 Macro Médio: {media_f1:.4f}")
+else:
+    print("Não foi possível calcular a média (nenhum F1 extraído).")
+print("="*30)

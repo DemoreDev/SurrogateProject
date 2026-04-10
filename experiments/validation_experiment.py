@@ -109,7 +109,7 @@ def main(args):
 
         # Loop secundário (itera sobre os 3 folds)
         for fold in range(3):
-            print(f"Executando Fold {fold}...")
+            print(f"\n\nExecutando Fold {fold}...")
             
             # Caminhos dos ARFFs 
             orig_train_path = ARFF_PATH / f"{args.dataset_name.lower()}-train-{fold}.arff"
@@ -164,6 +164,14 @@ def main(args):
                     f1 = text_metrics.get("f1_real")
                     size = res.get("model_size")
                     print(f"    [+] Sucesso! F1: {f1} | Tempo: {res.get('time_sec')}s | Tamanho: {size} bytes")
+
+                    debug_filepath = DEBUG_PATH / f"pipe{i+1}_fold{fold}.txt"
+                    with open(debug_filepath, "a", encoding="utf-8") as f:
+                        f.write(f"\n{'='*80}\n")
+                        f.write(f"[Pipeline: {pipeline_info}\n")
+                        f.write(f"[COMANDO]\n{' '.join(cmd)}\n")
+                        f.write(f"[SAÍDA DO JAVA]\n{res['output']}\n")
+                        f.write(f"{'='*80}\n")
                     
                     # Guarda as métricas dessa rodada específica
                     folds_results.append({
@@ -206,18 +214,20 @@ def main(args):
         folds_validos = [r for r in folds_results if r["f1"] is not None]
 
         if len(folds_validos) > 0:
-            # Ordena a lista de dicionários baseando-se no valor do F1 (do menor pro maior)
-            folds_validos.sort(key=lambda x: x["f1"])
-            
-            # Pega o índice do meio 
-            indice_mediana = len(folds_validos) // 2
-            fold_mediano = folds_validos[indice_mediana]
+            # Calcula a média aritmética do F1
+            f1_total = sum(r["f1"] for r in folds_validos)
+            csv_line["real_f1"] = f1_total / len(folds_validos)
 
-            csv_line["real_f1"] = fold_mediano["f1"]
-            csv_line["real_size"] = fold_mediano["size"]
+            # Calcula a média aritmética do Tamanho do Modelo (Size)
+            size_total = sum(r["size"] for r in folds_validos)
+            csv_line["real_size"] = size_total / len(folds_validos)
+            
             csv_line["status"] = "SUCESSO"
         else:
-            csv_line["error"] = "Todos os 3 folds falharam ou não retornaram F1."
+            csv_line["real_f1"] = 0.0
+            csv_line["real_size"] = 1e9 # Valor alto para indicar falha
+            csv_line["status"] = "FALHA"
+            csv_line["error"] = "Todos os 3 folds falharam ou não retornaram F1"
 
         # Salva no disco
         save_line(csv_line)
@@ -257,6 +267,7 @@ if __name__ == "__main__":
     CSV_PATH = BASE_DIR / "results" / "predicted_pipeline_ranking" / f"best_{args.dataset_name.lower()}_xgboost.csv"
     OTHER_PATH = BASE_DIR / "data" / "meta" / "meta_processed" / "test_medical.csv"
     OUTPUT_CSV = BASE_DIR / "results" / "validation" / f"validated_{args.dataset_name.lower()}_pipelines.csv"
+    DEBUG_PATH = BASE_DIR / "debug"
     ARFF_PATH = BASE_DIR / "data" / "raw" / f"{args.dataset_name.lower()}"
     TEMP_DIR = BASE_DIR / "temp"
     TEMP_DIR.mkdir(parents=True, exist_ok=True)

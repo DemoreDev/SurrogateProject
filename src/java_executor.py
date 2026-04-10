@@ -37,7 +37,8 @@ class MekaExecutor:
 
         # Base do Comando Java
         cmd = [
-            "/home/lddemore@posgrad.usricmc.icmc.usp.br/anaconda3/envs/minhaic/bin/java",
+            #"/home/lddemore@posgrad.usricmc.icmc.usp.br/anaconda3/envs/minhaic/bin/java",
+            "java",
             self.memory,          
             "-cp", self.classpath 
         ]
@@ -68,16 +69,25 @@ class MekaExecutor:
 
         # Adiciona o SLC (Weka Base)
         slc_string = translated_pipeline.get("slc")
-        if slc_string:
-            cmd.append("-W")
-            # Divide os parâmetros. Ex: '...RandomForest -I 10' -> ['...RandomForest', '-I', '10']
-            cmd.extend(slc_string.split())
-
-        # Adiciona o Kernel (se houver)
         kernel_string = translated_pipeline.get("kernel")
-        if kernel_string:
-            cmd.extend(["--", "-K"])
-            cmd.append(kernel_string)
+
+        if slc_string:
+            slc_parts = slc_string.split()
+            
+            cmd.append("-W")
+            cmd.append(slc_parts[0]) # Adiciona apenas o nome da classe (Ex: weka...SMO)
+            
+            if len(slc_parts) > 1 or kernel_string:
+                cmd.append("--")
+                
+            # Coloca os parâmetros do SLC 
+            if len(slc_parts) > 1:
+                cmd.extend(slc_parts[1:])
+
+            # Coloca os parâmetros do Kernel 
+            if kernel_string:
+                cmd.append("-K")
+                cmd.extend(kernel_string.split()) 
 
         # PRINT DE DEBUG
         print(f"\n[DEBUG EXECUTOR] Comando montado:\n{' '.join(cmd)}\n")
