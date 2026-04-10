@@ -78,7 +78,7 @@ def main(args):
     translator = PipelineTranslator()
 
     # Carrega o CSV de entrada 
-    df = pd.read_csv(CSV_PATH)
+    df = pd.read_csv(OTHER_PATH)
 
     # Garante que o valor passado não seja maior que o df
     top_n = min(args.top_n, len(df)) 
@@ -255,6 +255,7 @@ if __name__ == "__main__":
 
     # Configurações de Caminho
     CSV_PATH = BASE_DIR / "results" / "predicted_pipeline_ranking" / f"best_{args.dataset_name.lower()}_xgboost.csv"
+    OTHER_PATH = BASE_DIR / "data" / "meta" / "meta_processed" / "test_medical.csv"
     OUTPUT_CSV = BASE_DIR / "results" / "validation" / f"validated_{args.dataset_name.lower()}_pipelines.csv"
     ARFF_PATH = BASE_DIR / "data" / "raw" / f"{args.dataset_name.lower()}"
     TEMP_DIR = BASE_DIR / "temp"
