@@ -37,7 +37,7 @@ class MekaExecutor:
 
         # Base do Comando Java
         cmd = [
-            "java",
+            "/home/lddemore@posgrad.usricmc.icmc.usp.br/anaconda3/envs/minhaic/bin/java",
             self.memory,          
             "-cp", self.classpath 
         ]
